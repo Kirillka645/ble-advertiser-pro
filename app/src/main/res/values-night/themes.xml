@@ -1,0 +1,31 @@
+<resources>
+
+    <style name="Theme.BleAdvertiserPro" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/m3_primary</item>
+        <item name="colorOnPrimary">@color/m3_on_primary</item>
+        <item name="colorPrimaryContainer">@color/m3_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/m3_on_primary_container</item>
+
+        <item name="colorSecondary">@color/m3_secondary</item>
+        <item name="colorOnSecondary">@color/m3_on_secondary</item>
+        <item name="colorSecondaryContainer">@color/m3_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/m3_on_secondary_container</item>
+
+        <item name="colorTertiary">@color/m3_tertiary</item>
+        <item name="colorOnTertiary">@color/m3_on_tertiary</item>
+
+        <item name="colorError">@color/m3_error</item>
+        <item name="colorOnError">@color/m3_on_error</item>
+
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <item name="colorPrimaryVariant">@color/m3_primary_container</item>
+        <item name="colorSecondaryVariant">@color/m3_secondary_container</item>
+
+        <item name="seekbarBackground">@color/grey_normal</item>
+        <item name="seekbarProgress">?attr/colorPrimary</item>
+        <item name="seekbarSecondaryProgress">?attr/colorPrimaryContainer</item>
+    </style>
+
+</resources>
