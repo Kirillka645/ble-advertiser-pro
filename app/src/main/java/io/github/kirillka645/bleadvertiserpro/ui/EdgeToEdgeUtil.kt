@@ -7,20 +7,21 @@ import androidx.core.view.updatePadding
 
 
 fun setupEdgeToEdge(view: View, top: Boolean = true, bottom: Boolean = true) {
+    val leftPadding = view.paddingLeft
+    val topPadding = view.paddingTop
+    val rightPadding = view.paddingRight
+    val bottomPadding = view.paddingBottom
     ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
         val i = insets.getInsets(
             WindowInsetsCompat.Type.systemBars() + WindowInsetsCompat.Type.displayCutout()
         )
         v.updatePadding(
-            left = i.left,
-            right = i.right,
+            left = leftPadding + i.left,
+            top = topPadding + if (top) i.top else 0,
+            right = rightPadding + i.right,
+            bottom = bottomPadding + if (bottom) i.bottom else 0,
         )
-        if (top) {
-            v.updatePadding(top = i.top)
-        }
-        if (bottom) {
-            v.updatePadding(bottom = i.bottom)
-        }
         WindowInsetsCompat.CONSUMED
     }
+    ViewCompat.requestApplyInsets(view)
 }
