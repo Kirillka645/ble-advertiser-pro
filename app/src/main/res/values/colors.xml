@@ -24,23 +24,9 @@
     <color name="permission_denied">#c50f1f</color>
     <color name="permission_granted">#13a10e</color>
 
-    <!-- Material 3 light tokens (seed: #2d5eed). Used when dynamic colors are off
-         or running below Android 12. -->
-    <color name="m3_primary">#3457D5</color>
-    <color name="m3_on_primary">#FFFFFF</color>
-    <color name="m3_primary_container">#DDE1FF</color>
-    <color name="m3_on_primary_container">#001257</color>
 
-    <color name="m3_secondary">#595E72</color>
-    <color name="m3_on_secondary">#FFFFFF</color>
-    <color name="m3_secondary_container">#DDE1F9</color>
-    <color name="m3_on_secondary_container">#161B2C</color>
 
-    <color name="m3_tertiary">#75546F</color>
-    <color name="m3_on_tertiary">#FFFFFF</color>
 
-    <color name="m3_error">#BA1A1A</color>
-    <color name="m3_on_error">#FFFFFF</color>
 
     <!-- Text Colors -->
     <color name="text_color">#000000</color>
@@ -82,4 +68,37 @@
     <!-- BACKGROUND -->
     <color name="background_color">@color/white</color>
 
+    <!-- Fallback palette when wallpaper colors are unavailable or disabled. -->
+    <color name="m3_primary">#3457D5</color>
+    <color name="m3_on_primary">#FFFFFF</color>
+    <color name="m3_primary_container">#DDE1FF</color>
+    <color name="m3_on_primary_container">#001257</color>
+    <color name="m3_secondary">#595E72</color>
+    <color name="m3_on_secondary">#FFFFFF</color>
+    <color name="m3_secondary_container">#DDE1F9</color>
+    <color name="m3_on_secondary_container">#161B2C</color>
+    <color name="m3_tertiary">#745470</color>
+    <color name="m3_on_tertiary">#FFFFFF</color>
+    <color name="m3_tertiary_container">#FFD7F2</color>
+    <color name="m3_on_tertiary_container">#2B122A</color>
+    <color name="m3_error">#BA1A1A</color>
+    <color name="m3_on_error">#FFFFFF</color>
+    <color name="m3_error_container">#FFDAD6</color>
+    <color name="m3_on_error_container">#410002</color>
+    <color name="m3_surface">#FAF8FF</color>
+    <color name="m3_on_surface">#1A1B23</color>
+    <color name="m3_surface_variant">#E2E1EC</color>
+    <color name="m3_on_surface_variant">#454652</color>
+    <color name="m3_surface_container_lowest">#FFFFFF</color>
+    <color name="m3_surface_container_low">#F4F3FC</color>
+    <color name="m3_surface_container">#EEEDF6</color>
+    <color name="m3_surface_container_high">#E8E7F0</color>
+    <color name="m3_surface_container_highest">#E3E1EA</color>
+    <color name="m3_surface_dim">#DAD9E2</color>
+    <color name="m3_surface_bright">#FAF8FF</color>
+    <color name="m3_outline">#757682</color>
+    <color name="m3_outline_variant">#C5C5D2</color>
+    <color name="m3_inverse_surface">#2F3039</color>
+    <color name="m3_inverse_on_surface">#F2F0FA</color>
+    <color name="m3_inverse_primary">#B7C4FF</color>
 </resources>
