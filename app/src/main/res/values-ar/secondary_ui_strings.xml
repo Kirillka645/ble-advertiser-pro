@@ -2,6 +2,8 @@
 <resources>
     <string name="collection_screen_title">مجموعات الإعلانات</string>
     <string name="collection_screen_description">اختر مجموعة لعرض الحزم المتاحة فيها.</string>
+    <string name="collection_fast_pair_hint">تم إصلاح Fast Pair على الأجهزة الحديثة. لم تعد هذه الميزة مدعومة.</string>
+    <string name="collection_continuity_hint">في iOS 18 والإصدارات الأحدث، لا تتعطّل الأجهزة، لكن قد تستمر النوافذ المنبثقة في الظهور.</string>
     <string name="collection_fast_pair_title">Fast Pair</string>
     <string name="collection_continuity_title">Continuity</string>
     <string name="collection_easy_setup_title">Easy Setup</string>

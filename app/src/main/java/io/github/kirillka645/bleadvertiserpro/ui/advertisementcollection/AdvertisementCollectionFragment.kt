@@ -148,19 +148,19 @@ class AdvertisementCollectionFragment : Fragment() {
             advertisementSetTypes.contains(AdvertisementSetType.ADVERTISEMENT_TYPE_FAST_PAIRING_DEBUG)
         ) {
             advertisementSetCollection.hints.add(
-                "Fast Pairing is patched on all modern devices due to this we no longer offer support for this feature"
+                getString(R.string.collection_fast_pair_hint)
             )
         }
 
         if (advertisementSetTypes.contains(AdvertisementSetType.ADVERTISEMENT_TYPE_CONTINUITY_IOS_17_CRASH)) {
             advertisementSetCollection.hints.add(
-                "Devices on iOS 18 or above will not crash but still get pop-ups"
+                getString(R.string.collection_continuity_hint)
             )
         }
 
         advertisementSetTypes.forEach { advertisementSetType ->
             val advertisementSetList = AdvertisementSetList()
-            advertisementSetList.title = getString(advertisementSetType.stringResId()) + " List"
+            advertisementSetList.title = getString(advertisementSetType.stringResId())
 
             val advertisementSets =
                 DatabaseHelpers.getAllAdvertisementSetsForType(advertisementSetType)
@@ -179,7 +179,7 @@ class AdvertisementCollectionFragment : Fragment() {
                 AdvertisementSetType.ADVERTISEMENT_TYPE_FAST_PAIRING_NON_PRODUCTION,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_FAST_PAIRING_DEBUG
             ),
-            "Fast Pair Collection"
+            getString(R.string.collection_fast_pair_title)
         )
     }
 
@@ -189,7 +189,7 @@ class AdvertisementCollectionFragment : Fragment() {
                 AdvertisementSetType.ADVERTISEMENT_TYPE_EASY_SETUP_WATCH,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_EASY_SETUP_BUDS
             ),
-            "Easy Setup Collection"
+            getString(R.string.collection_easy_setup_title)
         )
     }
 
@@ -202,14 +202,14 @@ class AdvertisementCollectionFragment : Fragment() {
                 AdvertisementSetType.ADVERTISEMENT_TYPE_CONTINUITY_ACTION_MODALS,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_CONTINUITY_IOS_17_CRASH
             ),
-            "Continuity Collection"
+            getString(R.string.collection_continuity_title)
         )
     }
 
     private fun onSwiftPairingCardViewClicked() {
         navigateToAdvertisementFragmentWithType(
             listOf(AdvertisementSetType.ADVERTISEMENT_TYPE_SWIFT_PAIRING),
-            "Swift Pair Collection"
+            getString(R.string.collection_swift_pair_title)
         )
     }
 
@@ -219,7 +219,7 @@ class AdvertisementCollectionFragment : Fragment() {
                 AdvertisementSetType.ADVERTISEMENT_TYPE_LOVESPOUSE_PLAY,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_LOVESPOUSE_STOP
             ),
-            "Lovespouse Collection"
+            getString(R.string.collection_lovespouse_title)
         )
     }
 
@@ -243,7 +243,7 @@ class AdvertisementCollectionFragment : Fragment() {
                 AdvertisementSetType.ADVERTISEMENT_TYPE_LOVESPOUSE_PLAY,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_LOVESPOUSE_STOP
             ),
-            "Kitchen Sink Collection"
+            getString(R.string.collection_kitchen_sink_title)
         )
     }
 }

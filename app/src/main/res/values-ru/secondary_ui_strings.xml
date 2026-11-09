@@ -2,6 +2,8 @@
 <resources>
     <string name="collection_screen_title">Коллекции объявлений</string>
     <string name="collection_screen_description">Выберите коллекцию, чтобы просмотреть доступные наборы.</string>
+    <string name="collection_fast_pair_hint">На современных устройствах Fast Pair исправлен. Эта функция больше не поддерживается.</string>
+    <string name="collection_continuity_hint">В iOS 18 и новее сбой не происходит, но всплывающие окна могут появляться.</string>
     <string name="collection_fast_pair_title">Fast Pair</string>
     <string name="collection_continuity_title">Continuity</string>
     <string name="collection_easy_setup_title">Easy Setup</string>

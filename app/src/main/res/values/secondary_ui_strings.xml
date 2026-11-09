@@ -2,6 +2,8 @@
 <resources>
     <string name="collection_screen_title">Advertisement collections</string>
     <string name="collection_screen_description">Choose a collection to browse its available sets.</string>
+    <string name="collection_fast_pair_hint">Fast Pair is patched on modern devices. This feature is no longer supported.</string>
+    <string name="collection_continuity_hint">On iOS 18 and later, devices no longer crash, but may still show pop-ups.</string>
     <string name="collection_fast_pair_title">Fast Pair</string>
     <string name="collection_continuity_title">Continuity</string>
     <string name="collection_easy_setup_title">Easy Setup</string>
