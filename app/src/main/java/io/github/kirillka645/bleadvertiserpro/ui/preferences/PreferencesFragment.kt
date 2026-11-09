@@ -19,7 +19,6 @@ import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.color.MaterialColors
-import io.github.kirillka645.bleadvertiserpro.BleAdvertiserApplication
 import io.github.kirillka645.bleadvertiserpro.Helpers.LogDirectoryPicker
 import io.github.kirillka645.bleadvertiserpro.Helpers.LogFileManager
 import io.github.kirillka645.bleadvertiserpro.Helpers.ThemeManager
@@ -79,16 +78,6 @@ class PreferencesFragment : PreferenceFragmentCompat(), MenuProvider {
         }
         themePreference?.summary = themeManager.getThemeString(requireContext())
 
-        findPreference<SwitchPreferenceCompat>(
-            getString(R.string.preference_key_use_dynamic_colors)
-        )?.setOnPreferenceChangeListener { _, _ ->
-            val hostActivity = requireActivity()
-            hostActivity.window.decorView.post {
-                (hostActivity.application as? BleAdvertiserApplication)
-                    ?.recreateThemedActivities()
-            }
-            true
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

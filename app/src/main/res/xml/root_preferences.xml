@@ -10,13 +10,15 @@
             android:key="enable_logging"
             android:title="@string/settings_ui_logging_title"
             android:summary="@string/settings_ui_logging_summary"
-            app:iconSpaceReserved="false" />
+            app:iconSpaceReserved="false"
+            app:widgetLayout="@layout/preference_material_switch" />
 
         <SwitchPreferenceCompat
             android:key="enable_notifications"
             android:title="@string/settings_ui_notifications_title"
             android:summary="@string/settings_ui_notifications_summary"
-            app:iconSpaceReserved="false" />
+            app:iconSpaceReserved="false"
+            app:widgetLayout="@layout/preference_material_switch" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -49,7 +51,8 @@
             android:title="@string/settings_ui_legacy_advertising_title"
             android:summary="@string/settings_ui_legacy_advertising_summary"
             android:defaultValue="true"
-            app:iconSpaceReserved="false" />
+            app:iconSpaceReserved="false"
+            app:widgetLayout="@layout/preference_material_switch" />
 
         <EditTextPreference
             android:key="@string/preference_key_interval_advertising_queue_handler"
@@ -67,7 +70,8 @@
             android:title="@string/settings_ui_burst_mode_title"
             android:summary="@string/settings_ui_burst_mode_summary"
             android:defaultValue="false"
-            app:iconSpaceReserved="false" />
+            app:iconSpaceReserved="false"
+            app:widgetLayout="@layout/preference_material_switch" />
 
         <EditTextPreference
             android:key="@string/preference_key_auto_stop_minutes"
@@ -90,7 +94,8 @@
             android:title="@string/settings_ui_dynamic_colors_title"
             android:summary="@string/settings_ui_dynamic_colors_summary"
             android:defaultValue="true"
-            app:iconSpaceReserved="false" />
+            app:iconSpaceReserved="false"
+            app:widgetLayout="@layout/preference_material_switch" />
 
         <ListPreference
             android:key="theme_mode"
