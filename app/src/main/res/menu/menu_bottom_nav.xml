@@ -3,15 +3,15 @@
     <item
         android:id="@id/nav_start"
         android:icon="@drawable/ic_info"
-        android:title="@string/bottom_nav_start" />
+        android:title="@string/home_tab" />
 
     <item
         android:id="@id/nav_advertisement_collection"
         android:icon="@drawable/bluetooth_searching"
-        android:title="@string/bottom_nav_advertise" />
+        android:title="@string/collections_tab" />
 
     <item
         android:id="@id/nav_spam_detector"
         android:icon="@drawable/ic_location_searching"
-        android:title="@string/bottom_nav_detect" />
+        android:title="@string/scan_tab" />
 </menu>
