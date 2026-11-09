@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_ui_title">Настройки</string>
+    <string name="settings_ui_category_general">Основные</string>
+    <string name="settings_ui_category_advanced">Дополнительно</string>
+    <string name="settings_ui_category_advertising">BLE-трансляция</string>
+    <string name="settings_ui_category_appearance">Внешний вид</string>
+    <string name="settings_ui_category_logging">Журналы</string>
+
+    <string name="settings_ui_logging_title">Вести журнал</string>
+    <string name="settings_ui_logging_summary">Сохранять журналы приложения в выбранную папку.</string>
+    <string name="settings_ui_notifications_title">Уведомления</string>
+    <string name="settings_ui_notifications_summary">Показывать оповещения о важных событиях.</string>
+    <string name="settings_ui_scan_interval_title">Интервал сканирования</string>
+    <string name="settings_ui_scan_interval_summary">Время между BLE-сканированиями, в секундах.</string>
+    <string name="settings_ui_scan_mode_title">Режим сканирования</string>
+    <string name="settings_ui_scan_mode_summary">Баланс скорости сканирования и расхода батареи.</string>
+    <string-array name="settings_ui_scan_mode_entries">
+        <item>Энергосбережение</item>
+        <item>Сбалансированный</item>
+        <item>Низкая задержка</item>
+    </string-array>
+
+    <string name="settings_ui_legacy_advertising_title">Совместимость с Bluetooth 4</string>
+    <string name="settings_ui_legacy_advertising_summary">Использовать режим BLE-рекламы Bluetooth 4.</string>
+    <string name="settings_ui_advertising_duration_title">Длительность передачи (мс)</string>
+    <string name="settings_ui_advertising_duration_summary">Длительность одной передачи; рекомендуется 1 000–10 000 мс.</string>
+    <string name="settings_ui_burst_mode_title">Ускоренная смена наборов</string>
+    <string name="settings_ui_burst_mode_summary">Переключать наборы с минимальным поддерживаемым интервалом.</string>
+    <string name="settings_ui_auto_stop_title">Автоостановка (мин)</string>
+    <string name="settings_ui_auto_stop_summary">Остановить через заданное число минут; 0 — отключить.</string>
+
+    <string name="settings_ui_dynamic_colors_title">Динамические цвета</string>
+    <string name="settings_ui_dynamic_colors_summary">Использовать цвета обоев на Android 12 и новее.</string>
+    <string name="settings_ui_theme_title">Тема</string>
+</resources>

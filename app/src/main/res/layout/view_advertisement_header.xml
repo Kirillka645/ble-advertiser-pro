@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="12dp"
+    android:paddingBottom="20dp">
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.BleAdvertiser.Card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="?attr/colorPrimaryContainer">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+            <FrameLayout android:layout_width="56dp" android:layout_height="56dp">
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/bluetooth"
+                    app:tint="?attr/colorOnPrimaryContainer" />
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/advertisement_session_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminate="true"
+                    android:importantForAccessibility="no"
+                    android:visibility="gone"
+                    app:indicatorSize="52dp"
+                    app:indicatorInset="0dp"
+                    app:trackThickness="2dp" />
+            </FrameLayout>
+            <TextView
+                android:id="@+id/advertisementFragmentCollectionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:accessibilityHeading="true"
+                android:textAppearance="@style/TextAppearance.BleAdvertiser.Headline"
+                android:textColor="?attr/colorOnPrimaryContainer"
+                tools:text="Apple Continuity" />
+            <TextView
+                android:id="@+id/advertisementFragmentCollectionSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="@style/TextAppearance.BleAdvertiser.Body"
+                android:textColor="?attr/colorOnPrimaryContainer"
+                tools:text="24 devices · 3 lists" />
+            <TextView
+                android:id="@+id/advertisementFragmentCollectionHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="@style/TextAppearance.BleAdvertiser.Body"
+                android:textColor="?attr/colorOnPrimaryContainer" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/session_queue_order"
+        android:textAppearance="@style/TextAppearance.BleAdvertiser.Label" />
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/advertisement_queue_mode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:singleSelection="true"
+        app:selectionRequired="true">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/advertisementFragmentQueueModeLinearButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="56dp"
+            android:text="@string/session_in_order"
+            app:icon="@drawable/repeat"
+            app:iconGravity="textStart" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/advertisementFragmentQueueModeRandomButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="56dp"
+            android:text="@string/session_shuffle"
+            app:icon="@drawable/shuffle"
+            app:iconGravity="textStart" />
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+</LinearLayout>

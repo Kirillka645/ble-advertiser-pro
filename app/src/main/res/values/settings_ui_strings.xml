@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_ui_title">Settings</string>
+    <string name="settings_ui_category_general">General</string>
+    <string name="settings_ui_category_advanced">Advanced</string>
+    <string name="settings_ui_category_advertising">Advertising</string>
+    <string name="settings_ui_category_appearance">Appearance</string>
+    <string name="settings_ui_category_logging">Logging</string>
+
+    <string name="settings_ui_logging_title">Enable logging</string>
+    <string name="settings_ui_logging_summary">Save application logs to a selected folder.</string>
+    <string name="settings_ui_notifications_title">Notifications</string>
+    <string name="settings_ui_notifications_summary">Show alerts for important events.</string>
+    <string name="settings_ui_scan_interval_title">Scan interval</string>
+    <string name="settings_ui_scan_interval_summary">Time between BLE scans, in seconds.</string>
+    <string name="settings_ui_scan_mode_title">Scan mode</string>
+    <string name="settings_ui_scan_mode_summary">Balance scan speed and battery use.</string>
+    <string-array name="settings_ui_scan_mode_entries">
+        <item>Low power</item>
+        <item>Balanced</item>
+        <item>Low latency</item>
+    </string-array>
+
+    <string name="settings_ui_legacy_advertising_title">Legacy advertising</string>
+    <string name="settings_ui_legacy_advertising_summary">Use Bluetooth 4-compatible advertising.</string>
+    <string name="settings_ui_advertising_duration_title">Ad duration (ms)</string>
+    <string name="settings_ui_advertising_duration_summary">Time per BLE advertisement; 1,000–10,000 ms recommended.</string>
+    <string name="settings_ui_burst_mode_title">Burst mode</string>
+    <string name="settings_ui_burst_mode_summary">Cycle through sets at the fastest supported interval.</string>
+    <string name="settings_ui_auto_stop_title">Auto-stop (minutes)</string>
+    <string name="settings_ui_auto_stop_summary">Stop after this many minutes; 0 disables auto-stop.</string>
+
+    <string name="settings_ui_dynamic_colors_title">Dynamic color</string>
+    <string name="settings_ui_dynamic_colors_summary">Use wallpaper colors on Android 12 and later.</string>
+    <string name="settings_ui_theme_title">Theme</string>
+</resources>
