@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="collection_screen_title">Коллекции объявлений</string>
+    <string name="collection_screen_description">Выберите коллекцию, чтобы просмотреть доступные наборы.</string>
+    <string name="collection_fast_pair_title">Fast Pair</string>
+    <string name="collection_continuity_title">Continuity</string>
+    <string name="collection_easy_setup_title">Easy Setup</string>
+    <string name="collection_swift_pair_title">Swift Pair</string>
+    <string name="collection_lovespouse_title">Lovespouse</string>
+    <string name="collection_kitchen_sink_title">Все способы</string>
+    <string name="collection_target_android">Цель: Android</string>
+    <string name="collection_target_ios">Цель: iOS</string>
+    <string name="collection_target_samsung">Цель: Samsung</string>
+    <string name="collection_target_windows">Цель: Windows</string>
+    <string name="collection_target_lovespouse">Цель: Lovespouse</string>
+    <string name="collection_target_all">Цель: все платформы</string>
+    <string name="collection_distance_close">Дальность: небольшая</string>
+    <string name="collection_distance_mixed">Дальность: разная</string>
+    <string name="collection_distance_far">Дальность: большая</string>
+
+    <string name="detector_screen_title">Детектор спама</string>
+    <string name="detector_screen_description">Поиск поблизости устройств Flipper Zero и известных BLE-пакетов объявлений.</string>
+    <string name="detector_status_stopped">Проверка остановлена</string>
+    <string name="detector_status_stopped_description">Запустите проверку, чтобы искать устройства и пакеты поблизости.</string>
+    <string name="detector_status_running">Идёт проверка</string>
+    <string name="detector_status_running_description">Поиск поблизости устройств Flipper Zero и известных BLE-пакетов объявлений.</string>
+    <string name="detector_start">Начать проверку</string>
+    <string name="detector_stop">Остановить проверку</string>
+    <string name="detector_flipper_section_title">Устройства Flipper Zero</string>
+    <string name="detector_packages_section_title">Обнаруженные пакеты объявлений</string>
+    <string name="detector_flipper_empty_idle">Устройств пока нет. Запустите проверку, чтобы начать поиск.</string>
+    <string name="detector_flipper_empty_scanning">Устройства Flipper Zero пока не обнаружены.</string>
+    <string name="detector_packages_empty_idle">Пакетов пока нет. Запустите проверку, чтобы искать известные BLE-сигналы.</string>
+    <string name="detector_packages_empty_scanning">Пакеты пока не обнаружены.</string>
+</resources>
