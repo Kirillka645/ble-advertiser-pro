@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ExpandableListView
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import io.github.kirillka645.bleadvertiserpro.Adapters.AdvertisementSetCollectionExpandableListViewAdapter
@@ -27,7 +28,7 @@ import io.github.kirillka645.bleadvertiserpro.Models.AdvertisementSetCollection
 import io.github.kirillka645.bleadvertiserpro.Models.AdvertisementSetList
 import io.github.kirillka645.bleadvertiserpro.R
 import io.github.kirillka645.bleadvertiserpro.databinding.FragmentAdvertisementBinding
-import io.github.kirillka645.bleadvertiserpro.ui.setupEdgeToEdge
+import io.github.kirillka645.bleadvertiserpro.databinding.ViewAdvertisementHeaderBinding
 
 
 class AdvertisementFragment : Fragment(), IAdvertisementServiceCallback, IAdvertisementSetQueueHandlerCallback {
@@ -39,6 +40,8 @@ class AdvertisementFragment : Fragment(), IAdvertisementServiceCallback, IAdvert
 
     private var _binding: FragmentAdvertisementBinding? = null
     private val binding get() = _binding!!
+    private var _headerBinding: ViewAdvertisementHeaderBinding? = null
+    private val headerBinding get() = _headerBinding!!
 
     private lateinit var _expandableListView:ExpandableListView
     private lateinit var _adapter: AdvertisementSetCollectionExpandableListViewAdapter
@@ -50,6 +53,8 @@ class AdvertisementFragment : Fragment(), IAdvertisementServiceCallback, IAdvert
         val root: View = binding.root
 
         _expandableListView = binding.advertisementFragmentCollectionExpandableListview
+        _headerBinding = ViewAdvertisementHeaderBinding.inflate(inflater, _expandableListView, false)
+        _expandableListView.addHeaderView(headerBinding.root, null, false)
         setupUi(root.context)
 
         return root
@@ -75,10 +80,11 @@ class AdvertisementFragment : Fragment(), IAdvertisementServiceCallback, IAdvert
         //AppContext.getAdvertisementSetQueueHandler().deactivate()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _expandableListView.setAdapter(null)
+        _headerBinding = null
         _binding = null
-        //AppContext.getAdvertisementSetQueueHandler().deactivate(true)
     }
 
     fun onPlayButtonClicked(context: Context) {
@@ -102,27 +108,8 @@ class AdvertisementFragment : Fragment(), IAdvertisementServiceCallback, IAdvert
         setupExpandableListView(context, collection)
     }
 
-    fun getAdvertisementSetCollectionHint(advertisementSetCollection: AdvertisementSetCollection):String{
-        var hint = ""
-        var sep = ""
-        Log.d(_logTag, "Collection: " + advertisementSetCollection.advertisementSetLists.count())
-
-        if(advertisementSetCollection.hints.isNotEmpty()){
-
-            advertisementSetCollection.hints.forEach { it ->
-                Log.d(_logTag, "CURRENT HINT: " +it)
-                hint = hint + sep + it
-                //hint += sep + it
-                sep = ", "
-                Log.d(_logTag, "HINT IS NOW: " + hint)
-            }
-        } else {
-            hint = "-"
-        }
-
-        Log.d(_logTag, "Returning: " + hint)
-        return hint
-    }
+    fun getAdvertisementSetCollectionHint(collection: AdvertisementSetCollection): String =
+        collection.hints.joinToString("\n")
 
     private fun setupExpandableListView(
         context: Context,
@@ -163,10 +150,8 @@ class AdvertisementFragment : Fragment(), IAdvertisementServiceCallback, IAdvert
         }
     }
 
-    fun getAdvertisementSetCollectionSubTitle(advertisementSetCollection: AdvertisementSetCollection):String{
-        var subtitle = "${advertisementSetCollection.getTotalNumberOfAdvertisementSets()} Devices in ${advertisementSetCollection.getNumberOfLists()} Lists"
-        return subtitle
-    }
+    fun getAdvertisementSetCollectionSubTitle(collection: AdvertisementSetCollection): String =
+        getString(R.string.session_count, collection.getTotalNumberOfAdvertisementSets(), collection.getNumberOfLists())
 
     fun getAdvertisementSetSubtitle(advertisementSet: AdvertisementSet):String{
 
@@ -212,12 +197,11 @@ class AdvertisementFragment : Fragment(), IAdvertisementServiceCallback, IAdvert
     }
 
     fun setupUi(context: Context) {
-        setupEdgeToEdge(binding.root, top = false)
 
         // Views
-        var playButton = binding.advertisementFragmentPlayButton
-        var queueModeButtonLinear = binding.advertisementFragmentQueueModeLinearButton
-        var queueModeButtonRandom = binding.advertisementFragmentQueueModeRandomButton
+        val playButton = binding.advertisementFragmentPlayButton
+        val queueModeButtonLinear = headerBinding.advertisementFragmentQueueModeLinearButton
+        val queueModeButtonRandom = headerBinding.advertisementFragmentQueueModeRandomButton
 
         // Listeners
         playButton.setOnClickListener {
@@ -231,24 +215,10 @@ class AdvertisementFragment : Fragment(), IAdvertisementServiceCallback, IAdvert
         }
 
         // Observers
-        val advertisingAnimation = binding.advertisementFragmentAdvertisingAnimation
         viewModel.isAdvertising.observe(viewLifecycleOwner) { isAdvertising ->
-            if (isAdvertising) {
-                playButton.setImageDrawable(
-                    ResourcesCompat.getDrawable(
-                        resources, R.drawable.pause, context.theme
-                    )
-                )
-                advertisingAnimation.playAnimation()
-            } else {
-                playButton.setImageDrawable(
-                    ResourcesCompat.getDrawable(
-                        resources, R.drawable.play_arrow, context.theme
-                    )
-                )
-                advertisingAnimation.cancelAnimation()
-                advertisingAnimation.frame = 0
-            }
+            playButton.setIconResource(if (isAdvertising) R.drawable.pause else R.drawable.play_arrow)
+            playButton.setText(if (isAdvertising) R.string.session_pause else R.string.session_start)
+            headerBinding.advertisementSessionIndicator.isVisible = isAdvertising
         }
 
         viewModel.target.observe(viewLifecycleOwner) { target ->
@@ -260,37 +230,34 @@ class AdvertisementFragment : Fragment(), IAdvertisementServiceCallback, IAdvert
         }
 
         viewModel.advertisementSetCollectionTitle.observe(viewLifecycleOwner) { value ->
-            binding.advertisementFragmentCollectionTitle.text = value
+            headerBinding.advertisementFragmentCollectionTitle.text = value
         }
         viewModel.advertisementSetCollectionSubTitle.observe(viewLifecycleOwner) { value ->
-            binding.advertisementFragmentCollectionSubtitle.text = value
+            headerBinding.advertisementFragmentCollectionSubtitle.text = value
         }
         viewModel.advertisementSetCollectionHint.observe(viewLifecycleOwner) { value ->
-            binding.advertisementFragmentCollectionHint.text = value
+            headerBinding.advertisementFragmentCollectionHint.text = value
+            headerBinding.advertisementFragmentCollectionHint.isVisible = !value.isNullOrBlank()
         }
         viewModel.advertisementSetTitle.observe(viewLifecycleOwner) { value ->
-            binding.advertisementFragmentCurrentSetTitle.text = value
+            binding.advertisementFragmentCurrentSetTitle.text =
+                value.takeUnless { it.isBlank() || it == "-" } ?: getString(R.string.session_ready)
         }
         viewModel.advertisementSetSubTitle.observe(viewLifecycleOwner) { value ->
-            binding.advertisementFragmentCurrentSetSubTitle.text = value
+            binding.advertisementFragmentCurrentSetSubTitle.text =
+                value.takeUnless { it.isBlank() || it == "-" } ?: getString(R.string.session_selection_hint)
         }
 
         viewModel.advertisementQueueMode.observe(viewLifecycleOwner) { mode ->
-            val colorInactive = resources.getColor(R.color.text_color_light, context.theme)
-            val colorActive = resources.getColor(R.color.blue_normal, context.theme)
-
-            queueModeButtonLinear.setColorFilter(colorInactive)
-            queueModeButtonRandom.setColorFilter(colorInactive)
-
-            when (mode) {
-                AdvertisementQueueMode.ADVERTISEMENT_QUEUE_MODE_LINEAR -> queueModeButtonLinear.setColorFilter(colorActive)
-                AdvertisementQueueMode.ADVERTISEMENT_QUEUE_MODE_RANDOM -> queueModeButtonRandom.setColorFilter(colorActive)
-            }
+            headerBinding.advertisementQueueMode.check(when (mode) {
+                AdvertisementQueueMode.ADVERTISEMENT_QUEUE_MODE_LINEAR -> queueModeButtonLinear.id
+                AdvertisementQueueMode.ADVERTISEMENT_QUEUE_MODE_RANDOM -> queueModeButtonRandom.id
+            })
         }
     }
 
     fun highlightCurrentAdverstisementSet(currentAdvertisementSet: AdvertisementSet, advertisementState: AdvertisementState){
-        if(_adapter != null){
+        if (_binding != null && this::_adapter.isInitialized) {
             _adapter.advertisementSetLists.forEachIndexed{ listIndex, advertisementList ->
                 advertisementList.currentlyAdvertising = false
                 advertisementList.advertisementSets.forEachIndexed{ setIndex, advertisementSet ->

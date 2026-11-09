@@ -10,7 +10,7 @@
     <fragment
         android:id="@+id/nav_start"
         android:name="io.github.kirillka645.bleadvertiserpro.ui.start.StartFragment"
-        android:label="@string/bottom_nav_start"
+        android:label="@string/home_tab"
         tools:layout="@layout/fragment_start">
 
         <action
@@ -21,7 +21,7 @@
     <fragment
         android:id="@+id/nav_advertisement_collection"
         android:name="io.github.kirillka645.bleadvertiserpro.ui.advertisementcollection.AdvertisementCollectionFragment"
-        android:label="@string/bottom_nav_advertise"
+        android:label="@string/collections_tab"
         tools:layout="@layout/fragment_advertisement_collection">
 
         <action
@@ -42,7 +42,7 @@
     <fragment
         android:id="@+id/nav_spam_detector"
         android:name="io.github.kirillka645.bleadvertiserpro.ui.spamDetector.SpamDetectorFragment"
-        android:label="@string/bottom_nav_detect"
+        android:label="@string/scan_tab"
         tools:layout="@layout/fragment_spam_detector">
 
         <action
