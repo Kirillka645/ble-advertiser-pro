@@ -1,6 +1,10 @@
 package io.github.kirillka645.bleadvertiserpro
 
+import android.app.Activity
 import android.app.Application
+import android.app.Application.ActivityLifecycleCallbacks
+import android.os.Build
+import android.os.Bundle
 import androidx.preference.PreferenceManager
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.color.DynamicColorsOptions
@@ -10,7 +14,8 @@ import io.github.kirillka645.bleadvertiserpro.Helpers.ThemeManager
 import io.github.kirillka645.bleadvertiserpro.Interfaces.Services.IAdvertisementService
 import io.github.kirillka645.bleadvertiserpro.Interfaces.Services.IBluetoothLeScanService
 import io.github.kirillka645.bleadvertiserpro.Services.BluetoothLeScanService
-
+import java.util.Collections
+import java.util.WeakHashMap
 
 class BleAdvertiserApplication : Application() {
 
@@ -23,12 +28,40 @@ class BleAdvertiserApplication : Application() {
     lateinit var scanService: IBluetoothLeScanService
         private set
 
-    override fun onCreate() {
-        ThemeManager.getInstance().applyTheme(this)
+    private val themedActivities =
+        Collections.newSetFromMap(WeakHashMap<Activity, Boolean>())
+    private val dynamicColorsOptions = DynamicColorsOptions.Builder().build()
+    private val activityLifecycleCallbacks = object : ActivityLifecycleCallbacks {
+        override fun onActivityPreCreated(activity: Activity, savedInstanceState: Bundle?) {
+            if (activity !is SettingsActivity) {
+                applyDynamicColorsIfEnabled(activity)
+            }
+        }
 
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+            themedActivities.add(activity)
+        }
+
+        override fun onActivityStarted(activity: Activity) = Unit
+
+        override fun onActivityResumed(activity: Activity) = Unit
+
+        override fun onActivityPaused(activity: Activity) = Unit
+
+        override fun onActivityStopped(activity: Activity) = Unit
+
+        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
+
+        override fun onActivityDestroyed(activity: Activity) {
+            themedActivities.remove(activity)
+        }
+    }
+
+    override fun onCreate() {
         super.onCreate()
 
-        applyDynamicColorsIfEnabled()
+        ThemeManager.getInstance().applyTheme(this)
+        registerActivityLifecycleCallbacks(activityLifecycleCallbacks)
 
         setupAdvertisementService()
         scanService = BluetoothLeScanService(this)
@@ -39,15 +72,20 @@ class BleAdvertiserApplication : Application() {
         queueHandler = AdvertisementSetQueueHandler(this, advertisementService)
     }
 
-    private fun applyDynamicColorsIfEnabled() {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+    fun recreateThemedActivities() {
+        themedActivities.toList()
+            .filterNot { it.isFinishing || it.isDestroyed }
+            .forEach { it.recreate() }
+    }
+
+    fun applyDynamicColorsIfEnabled(activity: Activity) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return
+
         val key = getString(R.string.preference_key_use_dynamic_colors)
-        val enabled = prefs.getBoolean(key, true)
+        val enabled = PreferenceManager.getDefaultSharedPreferences(this)
+            .getBoolean(key, true)
         if (enabled) {
-            DynamicColors.applyToActivitiesIfAvailable(
-                this,
-                DynamicColorsOptions.Builder().build()
-            )
+            DynamicColors.applyToActivityIfAvailable(activity, dynamicColorsOptions)
         }
     }
 }
