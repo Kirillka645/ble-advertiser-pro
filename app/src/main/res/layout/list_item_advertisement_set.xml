@@ -8,7 +8,7 @@
     android:minHeight="56dp"
     android:orientation="horizontal">
 
-    <CheckBox
+    <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/checkboxAdvertisementSet"
         android:layout_width="48dp"
         android:layout_height="48dp"
