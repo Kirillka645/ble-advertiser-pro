@@ -13,8 +13,10 @@
     <dimen name="cornerRadiusCardview">15dp</dimen>
 
     <!-- Headline -->
-    <dimen name="textSizeHeadline">24dp</dimen>
-    <dimen name="textSizeHeadline2">20dp</dimen>
-    <dimen name="textSizeHeadline3">18dp</dimen>
-    <dimen name="textSizeHeadline4">16dp</dimen>
+    <dimen name="textSizeHeadline">24sp</dimen>
+    <dimen name="textSizeHeadline2">20sp</dimen>
+    <dimen name="textSizeHeadline3">18sp</dimen>
+    <dimen name="textSizeHeadline4">16sp</dimen>
+    <dimen name="screen_padding">20dp</dimen>
+    <dimen name="section_spacing">24dp</dimen>
 </resources>
