@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="collection_screen_title">Advertisement collections</string>
+    <string name="collection_screen_description">Choose a collection to browse its available sets.</string>
+    <string name="collection_fast_pair_title">Fast Pair</string>
+    <string name="collection_continuity_title">Continuity</string>
+    <string name="collection_easy_setup_title">Easy Setup</string>
+    <string name="collection_swift_pair_title">Swift Pair</string>
+    <string name="collection_lovespouse_title">Lovespouse</string>
+    <string name="collection_kitchen_sink_title">Kitchen Sink</string>
+    <string name="collection_target_android">Target: Android</string>
+    <string name="collection_target_ios">Target: iOS</string>
+    <string name="collection_target_samsung">Target: Samsung</string>
+    <string name="collection_target_windows">Target: Windows</string>
+    <string name="collection_target_lovespouse">Target: Lovespouse</string>
+    <string name="collection_target_all">Target: All platforms</string>
+    <string name="collection_distance_close">Distance: Close</string>
+    <string name="collection_distance_mixed">Distance: Mixed</string>
+    <string name="collection_distance_far">Distance: Far</string>
+
+    <string name="detector_screen_title">Spam detector</string>
+    <string name="detector_screen_description">Scan for nearby Flipper Zero devices and known BLE advertisement packages.</string>
+    <string name="detector_status_stopped">Detection stopped</string>
+    <string name="detector_status_stopped_description">Start detection to look for nearby devices and packages.</string>
+    <string name="detector_status_running">Detection running</string>
+    <string name="detector_status_running_description">Scanning for nearby Flipper Zero devices and known advertisement packages.</string>
+    <string name="detector_start">Start detection</string>
+    <string name="detector_stop">Stop detection</string>
+    <string name="detector_flipper_section_title">Flipper Zero devices</string>
+    <string name="detector_packages_section_title">Detected advertisement packages</string>
+    <string name="detector_flipper_empty_idle">No devices yet. Start detection to scan nearby devices.</string>
+    <string name="detector_flipper_empty_scanning">No Flipper Zero devices detected yet.</string>
+    <string name="detector_packages_empty_idle">No packages yet. Start detection to look for known BLE broadcasts.</string>
+    <string name="detector_packages_empty_scanning">No packages detected yet.</string>
+</resources>
