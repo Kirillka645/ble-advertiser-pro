@@ -1,331 +1,204 @@
 package io.github.kirillka645.bleadvertiserpro.ui.start
 
 import android.Manifest
-import android.app.Activity
 import android.bluetooth.BluetoothAdapter
-import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.cardview.widget.CardView
-import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import io.github.kirillka645.bleadvertiserpro.Database.AppDatabase
 import io.github.kirillka645.bleadvertiserpro.Helpers.BluetoothHelpers.Companion.bluetoothAdapter
 import io.github.kirillka645.bleadvertiserpro.Helpers.BluetoothHelpers.Companion.isBluetooth5Supported
 import io.github.kirillka645.bleadvertiserpro.PermissionCheck.PermissionCheck
 import io.github.kirillka645.bleadvertiserpro.R
 import io.github.kirillka645.bleadvertiserpro.databinding.FragmentStartBinding
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.lang.Exception
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
-
+import kotlinx.coroutines.withContext
 
 class StartFragment : Fragment() {
-
-    private val _logTag = "StartFragment"
-    private lateinit var enableBluetoothLauncher: ActivityResultLauncher<Intent>
-
-    private var _viewModel: StartViewModel? = null
-    private val viewModel get() = _viewModel!!
-
     private var _binding: FragmentStartBinding? = null
     private val binding get() = _binding!!
+    private lateinit var viewModel: StartViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    private val enableBluetooth = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (_binding != null) refreshDeviceStatus()
+    }
+    private val requestPermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+        if (_binding != null) refreshDeviceStatus()
+    }
 
-        _viewModel = ViewModelProvider(this)[StartViewModel::class.java]
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentStartBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
 
-        viewModel.appVersion.postValue(getAppVersion(root.context))
-        viewModel.bluetoothSupport.postValue(getBluetoothSupportText(root.context))
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this)[StartViewModel::class.java]
+        val context = requireContext()
+        val version = context.packageManager.getPackageInfo(context.packageName, 0).versionName.orEmpty()
+        binding.infoCard.startFragmentTextViewAppVersion.text = getString(R.string.home_app_version, version)
+        binding.infoCard.startFragmentTextViewAndroidVersion.text = getString(R.string.home_android_version, Build.VERSION.RELEASE)
+        binding.infoCard.startFragmentTextViewSdkVersion.text = getString(R.string.home_sdk_version, Build.VERSION.SDK_INT.toString())
 
-        enableBluetoothLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    checkBluetoothAdapter(false)
-                }
+        binding.startFragmentPermissionsCardview.setOnClickListener { showPermissionDialog() }
+        binding.startFragmentBluetoothCardview.setOnClickListener { promptEnableBluetooth() }
+        binding.startFragmentDatabaseCardview.setOnClickListener { refreshDeviceStatus() }
+        binding.homeBrowseCollections.setOnClickListener {
+            findNavController().navigate(R.id.nav_advertisement_collection)
+        }
+
+        viewModel.allPermissionsGranted.observe(viewLifecycleOwner) { renderReadiness() }
+        viewModel.bluetoothAdapterIsReady.observe(viewLifecycleOwner) { renderReadiness() }
+        viewModel.databaseIsReady.observe(viewLifecycleOwner) { renderReadiness() }
+        viewModel.isSeeding.observe(viewLifecycleOwner) { renderReadiness() }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                do {
+                    val (ready, seeding) = withContext(Dispatchers.IO) {
+                        val database = AppDatabase.getInstance()
+                        val preparing = database.isSeeding || database.inTransaction()
+                        (!preparing && database.advertisementSetDao().getAll().isNotEmpty()) to preparing
+                    }
+                    viewModel.isSeeding.value = seeding
+                    viewModel.databaseIsReady.value = ready
+                    if (!ready) delay(2_000)
+                } while (!ready)
             }
+        }
+    }
 
-        setupUi(root.context)
+    override fun onResume() {
+        super.onResume()
+        refreshDeviceStatus()
+    }
 
-        // These _should_ only need one-time initialisation, and thus don't need to be in onResume.
-        checkDatabase()
+    private fun canReadBluetooth(): Boolean = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
+        PermissionCheck.checkPermission(Manifest.permission.BLUETOOTH_CONNECT, requireContext())
 
-        return root
+    private fun refreshDeviceStatus() {
+        val context = requireContext()
+        viewModel.allPermissionsGranted.value = PermissionCheck.getAllRelevantPermissions().all {
+            PermissionCheck.checkPermission(it, context)
+        }
+        val adapter = context.bluetoothAdapter()
+        viewModel.bluetoothAdapterIsReady.value = canReadBluetooth() && adapter?.isEnabled == true
+        binding.startFragmentBluetoothStatusText.setText(when {
+            adapter == null -> R.string.home_bluetooth_unavailable
+            !canReadBluetooth() -> R.string.home_bluetooth_permission
+            adapter.isEnabled -> R.string.home_bluetooth_ready
+            else -> R.string.home_bluetooth_disabled
+        })
+        binding.infoCard.startFragmentTextViewBluetooth.setText(when {
+            adapter == null -> R.string.home_bluetooth_unavailable
+            !canReadBluetooth() -> R.string.home_bluetooth_unknown
+            context.isBluetooth5Supported() -> R.string.home_bluetooth_modern
+            else -> R.string.home_bluetooth_legacy
+        })
+    }
+
+    private fun renderReadiness() {
+        val permissionsReady = viewModel.allPermissionsGranted.value == true
+        val bluetoothReady = viewModel.bluetoothAdapterIsReady.value == true
+        val databaseReady = viewModel.databaseIsReady.value == true
+        val seeding = viewModel.isSeeding.value == true
+        binding.startFragmentRequirementsTextView.setText(
+            if (permissionsReady && bluetoothReady && databaseReady) R.string.home_setup_ready
+            else R.string.home_setup_pending
+        )
+        binding.startFragmentPermissionStatusText.setText(
+            if (permissionsReady) R.string.home_permissions_ready else R.string.home_permissions_action
+        )
+        binding.startFragmentDatabaseStatusText.setText(when {
+            databaseReady -> R.string.home_database_ready
+            seeding -> R.string.home_database_loading
+            else -> R.string.home_database_retry
+        })
+        binding.startFragmentDatabaseCardSeedingAnimation.isVisible = seeding
+        binding.startFragmentDatabaseCardIcon.isVisible = !seeding
+        binding.homeBrowseCollections.isEnabled = databaseReady
+        styleStatus(binding.startFragmentPermissionsCardview, binding.startFragmentPermissionStatusText, permissionsReady)
+        styleStatus(binding.startFragmentBluetoothCardview, binding.startFragmentBluetoothStatusText, bluetoothReady)
+        styleStatus(binding.startFragmentDatabaseCardview, binding.startFragmentDatabaseStatusText, databaseReady || seeding)
+    }
+
+    private fun styleStatus(card: MaterialCardView, status: TextView, ready: Boolean) {
+        val color = if (ready) com.google.android.material.R.attr.colorOnSurfaceVariant
+            else com.google.android.material.R.attr.colorError
+        status.setTextColor(MaterialColors.getColor(status, color))
+        card.strokeWidth = if (ready) 0 else resources.displayMetrics.density.toInt().coerceAtLeast(1)
+        card.setStrokeColor(MaterialColors.getColor(card, com.google.android.material.R.attr.colorOutlineVariant))
+    }
+
+    private fun showPermissionDialog() {
+        if (viewModel.allPermissionsGranted.value == true) {
+            Snackbar.make(binding.root, R.string.home_permissions_ready, Snackbar.LENGTH_SHORT).show()
+            return
+        }
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.missing_permissions_title)
+            .setMessage(R.string.missing_permissions_text)
+            .setPositiveButton(R.string.missing_permissions_grant) { _, _ -> requestRequiredPermissions() }
+            .setNeutralButton(R.string.home_app_settings) { _, _ -> openAppSettings() }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun requestRequiredPermissions() {
+        val missing = PermissionCheck.getAllRelevantPermissions().filter {
+            !PermissionCheck.checkPermission(it, requireContext())
+        }
+        // Android 11+ rejects a combined foreground/background location request.
+        val foreground = missing.filter { it != Manifest.permission.ACCESS_BACKGROUND_LOCATION }
+        when {
+            foreground.isNotEmpty() -> requestPermissions.launch(foreground.toTypedArray())
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION in missing && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setMessage(R.string.home_background_permission)
+                    .setPositiveButton(R.string.home_app_settings) { _, _ -> openAppSettings() }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show()
+            }
+            missing.isNotEmpty() -> requestPermissions.launch(missing.toTypedArray())
+        }
+    }
+
+    private fun openAppSettings() {
+        startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${requireContext().packageName}")))
+    }
+
+    private fun promptEnableBluetooth() {
+        val adapter = requireContext().bluetoothAdapter()
+        when {
+            adapter == null -> Snackbar.make(binding.root, R.string.home_bluetooth_unavailable, Snackbar.LENGTH_SHORT).show()
+            !canReadBluetooth() -> showPermissionDialog()
+            !adapter.isEnabled -> enableBluetooth.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+            else -> Snackbar.make(binding.root, R.string.home_bluetooth_ready, Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        checkRequiredPermissions(requireContext())
-        checkBluetoothAdapter(true)
-    }
-
-    fun getAppVersion(context: Context): String? {
-        val manager = context.packageManager
-        val info = manager.getPackageInfo(context.packageName, 0)
-        val version = info.versionName
-        return version
-    }
-
-    fun getBluetoothSupportText(context: Context): String {
-        if (context.isBluetooth5Supported()) {
-            return "Modern & Legacy"
-        } else {
-            return "Legacy only"
-        }
-    }
-
-    fun setupUi(context: Context){
-        // Seeding Animation
-        val seedingAnimationView: View = binding.startFragmentDatabaseCardSeedingAnimation
-        val databaseImageView: View = binding.startFragmentDatabaseCardIcon
-        viewModel.isSeeding.observe(viewLifecycleOwner) {
-            seedingAnimationView.visibility = when(it){
-                true -> View.VISIBLE
-                false -> View.GONE
-            }
-
-            databaseImageView.visibility = when(it){
-                true -> View.GONE
-                false -> View.VISIBLE
-            }
-        }
-
-        // App Version
-        val textViewAppVersion: TextView = binding.infoCard.startFragmentTextViewAppVersion
-        viewModel.appVersion.observe(viewLifecycleOwner) {
-            textViewAppVersion.text = "App Version: $it"
-        }
-
-        // Android Version
-        val textViewAndroidVersion: TextView = binding.infoCard.startFragmentTextViewAndroidVersion
-        viewModel.androidVersion.observe(viewLifecycleOwner) {
-            textViewAndroidVersion.text = "Android Version: $it"
-        }
-
-        // SDK Version
-        val textViewSdkVersion: TextView = binding.infoCard.startFragmentTextViewSdkVersion
-        viewModel.sdkVersion.observe(viewLifecycleOwner) {
-            textViewSdkVersion.text = "SDK Version: $it"
-        }
-
-        // Bluetooth Support
-        val textViewBluetoothSupport: TextView = binding.infoCard.startFragmentTextViewBluetooth
-        viewModel.bluetoothSupport.observe(viewLifecycleOwner) {
-            textViewBluetoothSupport.text = "Bluetooth: $it"
-        }
-
-        // Missing Requirements Text
-        val textViewRequirementsDescription: TextView = binding.startFragmentRequirementsTextView
-        val startFragmentMissingRequirementsTextView:  TextView = binding.startFragmentMissingRequirementsTextView
-        viewModel.missingRequirements.observe(viewLifecycleOwner) {missingRequirementsList ->
-          if(missingRequirementsList.isEmpty()){
-              startFragmentMissingRequirementsTextView.visibility = View.GONE
-              //textViewRequirementsDescription.visibility = View.GONE
-              startFragmentMissingRequirementsTextView.text = ""
-              textViewRequirementsDescription.text = "All requirements are met"
-          } else {
-              startFragmentMissingRequirementsTextView.visibility = View.VISIBLE
-              //textViewRequirementsDescription.visibility = View.VISIBLE
-              textViewRequirementsDescription.text = "Missing Requirements:"
-              var prepend = ""
-              var missingRequirementsString = ""
-              missingRequirementsList.forEach {missingRequirement ->
-                  missingRequirementsString += prepend + missingRequirement
-                  prepend = "\n"
-              }
-              startFragmentMissingRequirementsTextView.text = missingRequirementsString
-          }
-        }
-
-        // Permissions CardView
-        val startFragmentPermissionCardView: CardView = binding.startFragmentPermissionsCardview
-        startFragmentPermissionCardView.setOnClickListener {
-            checkRequiredPermissions(context)
-        }
-
-        val successBackground =
-            ResourcesCompat.getDrawable(resources, R.drawable.gradient_success, context.theme)
-        val errorBackground =
-            ResourcesCompat.getDrawable(resources, R.drawable.gradient_error, context.theme)
-
-        // Permissions CardView Content
-        val startFragmentPermissionCardViewContentWrapper: LinearLayout = binding.startFragmentPermissionCardViewContentWrapper
-        viewModel.allPermissionsGranted.observe(viewLifecycleOwner) {
-            if(it == true){
-                startFragmentPermissionCardViewContentWrapper.background = successBackground
-            } else {
-                startFragmentPermissionCardViewContentWrapper.background = errorBackground
-            }
-        }
-
-        // Bluetooth CardView
-        val startFragmentBluetoothCardView: CardView = binding.startFragmentBluetoothCardview
-        startFragmentBluetoothCardView.setOnClickListener {
-            checkBluetoothAdapter(true)
-        }
-
-        // Bluetooth CardView Content
-        val startFragmentBluetoothCardViewContentWrapper: LinearLayout = binding.startFragmentBluetoothCardViewContentWrapper
-        viewModel.bluetoothAdapterIsReady.observe(viewLifecycleOwner) {
-            if(it == true){
-                startFragmentBluetoothCardViewContentWrapper.background = successBackground
-            } else {
-                startFragmentBluetoothCardViewContentWrapper.background = errorBackground
-            }
-        }
-
-        // Database CardView
-        val startFragmentDatabaseCardview: CardView = binding.startFragmentDatabaseCardview
-        startFragmentDatabaseCardview.setOnClickListener {
-            checkDatabase()
-        }
-
-        // Service CardView Content
-        val startFragmentDatabaseCardViewContentWrapper: LinearLayout = binding.startFragmentDatabaseCardViewContentWrapper
-        viewModel.databaseIsReady.observe(viewLifecycleOwner) {
-            if(it == true){
-                startFragmentDatabaseCardViewContentWrapper.background = successBackground
-            } else {
-                startFragmentDatabaseCardViewContentWrapper.background = errorBackground
-            }
-        }
-    }
-
-    fun addMissingRequirement(missingRequirement:String){
-        var newList = viewModel.missingRequirements.value!!
-        if(!newList.contains(missingRequirement)){
-            newList.add(missingRequirement)
-        }
-        viewModel.missingRequirements.postValue(newList)
-    }
-
-    fun removeMissingRequirement(missingRequirement:String){
-        var newList = viewModel.missingRequirements.value!!
-        newList.remove(missingRequirement)
-        viewModel.missingRequirements.postValue(newList)
-    }
-
-    fun checkDatabase(){
-        CoroutineScope(Dispatchers.IO).launch {
-            var result = false
-            var database = AppDatabase.getInstance()
-            if(database != null){
-                removeMissingRequirement("Database is not initialized")
-                if(!database.isSeeding && !database.inTransaction()){
-                    removeMissingRequirement("Database is Seeding")
-                    viewModel.isSeeding.postValue(false)
-                    var numberOfAdvertisementSetEntities = database.advertisementSetDao().getAll().count()
-                    if(numberOfAdvertisementSetEntities > 0){
-                        removeMissingRequirement("Database is empty")
-                        result = true
-                    } else {
-                        addMissingRequirement("Database is empty")
-                    }
-                } else {
-                    addMissingRequirement("Database is Seeding")
-                    viewModel.isSeeding.postValue(true)
-                }
-
-            } else {
-                addMissingRequirement("Database is not initialized")
-            }
-            viewModel.databaseIsReady.postValue(result)
-
-            if(result == false){
-                // Check again in a few seconds
-                Executors.newSingleThreadScheduledExecutor().schedule({
-                    checkDatabase()
-                }, 2, TimeUnit.SECONDS)
-            }
-        }
-    }
-
-    fun checkBluetoothAdapter(promptIfAdapterIsDisabled: Boolean = false) {
-        val activity = requireActivity()
-        viewModel.bluetoothAdapterIsReady.postValue(false)
-
-        val bluetoothAdapter: BluetoothAdapter? = activity.bluetoothAdapter()
-        if (bluetoothAdapter != null) {
-            removeMissingRequirement("Bluetooth Adapter not found")
-            if (bluetoothAdapter.isEnabled) {
-                removeMissingRequirement("Bluetooth is disabled")
-                viewModel.bluetoothAdapterIsReady.postValue(true)
-            } else {
-                addMissingRequirement("Bluetooth is disabled")
-                if (promptIfAdapterIsDisabled) {
-                    promptEnableBluetooth()
-                }
-            }
-        } else {
-            addMissingRequirement("Bluetooth Adapter not found")
-        }
-    }
-
-    fun promptEnableBluetooth() {
-        if (PermissionCheck.checkPermission(
-                Manifest.permission.BLUETOOTH_CONNECT, requireContext()
-            )
-        ) {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            enableBluetoothLauncher.launch(enableBtIntent)
-        }
-    }
-
-    fun checkRequiredPermissions(context: Context) {
-        var allGranted = true
-
-        val allPermissions = PermissionCheck.getAllRelevantPermissions()
-        allPermissions.forEach { permission ->
-            val missingRequirementString =
-                "Permission " + permission.replace("android.permission.", "") + " not granted"
-
-            val isGranted = PermissionCheck.checkPermission(permission, context)
-            if (isGranted) {
-                removeMissingRequirement(missingRequirementString)
-            } else {
-                allGranted = false
-                addMissingRequirement(missingRequirementString)
-            }
-        }
-        viewModel.allPermissionsGranted.postValue(allGranted)
-
-        if (!allGranted) {
-            MaterialAlertDialogBuilder(context)
-                .setTitle(R.string.missing_permissions_title)
-                .setMessage(R.string.missing_permissions_text)
-                .setPositiveButton(
-                    R.string.missing_permissions_grant,
-                    { _, _ -> requestRequiredPermissions() }
-                )
-                .setNegativeButton(android.R.string.cancel, null /* dismiss dialog */)
-                .show()
-        }
-    }
-
-    fun requestRequiredPermissions() {
-        val allPermissions = PermissionCheck.getAllRelevantPermissions()
-        allPermissions.forEach { permission ->
-            PermissionCheck.checkPermissionAndRequest(permission, requireActivity())
-        }
     }
 }
