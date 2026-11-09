@@ -8,12 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import io.github.kirillka645.bleadvertiserpro.Adapters.FlipperDeviceScanResultListViewAdapter
 import io.github.kirillka645.bleadvertiserpro.Adapters.SpamPackageScanResultListViewAdapter
 import io.github.kirillka645.bleadvertiserpro.BleAdvertiserApplication
+import io.github.kirillka645.bleadvertiserpro.Helpers.BluetoothHelpers.Companion.bluetoothAdapter
 import io.github.kirillka645.bleadvertiserpro.Interfaces.Callbacks.IBluetoothLeScanCallback
 import io.github.kirillka645.bleadvertiserpro.Models.FlipperDeviceScanResult
 import io.github.kirillka645.bleadvertiserpro.Models.SpamPackageScanResult
+import io.github.kirillka645.bleadvertiserpro.PermissionCheck.PermissionCheck
 import io.github.kirillka645.bleadvertiserpro.R
 import io.github.kirillka645.bleadvertiserpro.Services.BluetoothLeScanForegroundService
 import io.github.kirillka645.bleadvertiserpro.databinding.FragmentSpamDetectorBinding
@@ -203,6 +207,15 @@ class SpamDetectorFragment : Fragment(), IBluetoothLeScanCallback {
             BluetoothLeScanForegroundService.stopService(context)
             viewModel.isDetecting.value = false
         } else {
+            val permissionsGranted = PermissionCheck.getAllRelevantPermissions().all {
+                PermissionCheck.checkPermission(it, context)
+            }
+            if (!permissionsGranted || context.bluetoothAdapter()?.isEnabled != true) {
+                Snackbar.make(binding.root, R.string.session_requirements_missing, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.home_tab) { findNavController().navigate(R.id.nav_start) }
+                    .show()
+                return
+            }
             BluetoothLeScanForegroundService.startService(context)
             viewModel.isDetecting.value = true
         }
