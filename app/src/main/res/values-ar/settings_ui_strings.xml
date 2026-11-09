@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_ui_title">الإعدادات</string>
+    <string name="settings_ui_category_general">عام</string>
+    <string name="settings_ui_category_advanced">متقدم</string>
+    <string name="settings_ui_category_advertising">بث BLE</string>
+    <string name="settings_ui_category_appearance">المظهر</string>
+    <string name="settings_ui_category_logging">السجلات</string>
+
+    <string name="settings_ui_logging_title">تفعيل التسجيل</string>
+    <string name="settings_ui_logging_summary">حفظ سجلات التطبيق في مجلد تختاره.</string>
+    <string name="settings_ui_notifications_title">الإشعارات</string>
+    <string name="settings_ui_notifications_summary">إظهار تنبيهات الأحداث المهمة.</string>
+    <string name="settings_ui_scan_interval_title">الفاصل الزمني للمسح</string>
+    <string name="settings_ui_scan_interval_summary">الوقت بين عمليات مسح BLE، بالثواني.</string>
+    <string name="settings_ui_scan_mode_title">وضع المسح</string>
+    <string name="settings_ui_scan_mode_summary">وازن بين سرعة المسح واستهلاك البطارية.</string>
+    <string-array name="settings_ui_scan_mode_entries">
+        <item>استهلاك منخفض للطاقة</item>
+        <item>متوازن</item>
+        <item>زمن انتقال منخفض</item>
+    </string-array>
+
+    <string name="settings_ui_legacy_advertising_title">الإعلان التقليدي</string>
+    <string name="settings_ui_legacy_advertising_summary">استخدام إعلانات BLE المتوافقة مع Bluetooth 4.</string>
+    <string name="settings_ui_advertising_duration_title">مدة الإعلان (مللي ثانية)</string>
+    <string name="settings_ui_advertising_duration_summary">مدة كل إعلان BLE؛ يوصى بـ 1,000–10,000 مللي ثانية.</string>
+    <string name="settings_ui_burst_mode_title">وضع التبديل السريع</string>
+    <string name="settings_ui_burst_mode_summary">التبديل بين المجموعات بأقصر فاصل زمني مدعوم.</string>
+    <string name="settings_ui_auto_stop_title">إيقاف تلقائي (دقائق)</string>
+    <string name="settings_ui_auto_stop_summary">الإيقاف بعد عدد الدقائق المحدد؛ 0 يعطّل الإيقاف التلقائي.</string>
+
+    <string name="settings_ui_dynamic_colors_title">الألوان الديناميكية</string>
+    <string name="settings_ui_dynamic_colors_summary">استخدام ألوان خلفية الشاشة على Android 12 والإصدارات الأحدث.</string>
+    <string name="settings_ui_theme_title">السمة</string>
+</resources>

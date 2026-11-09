@@ -1,144 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/spamDetectorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.spamDetector.SpamDetectorFragment"
-    android:id="@+id/spamDetectorLayout">
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    tools:context=".ui.spamDetector.SpamDetectorFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/spamDetectorTopLayout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.33"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="@id/spamDetectorLayout"
-        android:padding="10dp">
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:padding="10dp"
-            android:id="@+id/spamDetectionAnimation"
-            android:layout_width="match_parent"
-            app:layout_constraintStart_toStartOf="@id/spamDetectorTopLayout"
-            app:layout_constraintEnd_toEndOf="@id/spamDetectorTopLayout"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="@id/spamDetectorTopLayout"
-            app:layout_constraintBottom_toTopOf="@id/spamDetectorFragmentTitle"
-            app:lottie_rawRes="@raw/detect"
-            app:lottie_autoPlay="false"
-            app:lottie_loop="true"
-            />
-
-            <TextView
-                android:id="@+id/spamDetectorFragmentTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Spam Detector"
-                android:textStyle="bold"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/textSizeHeadline"
-                app:layout_constraintBottom_toTopOf="@id/spamDetectorFragmentSubTitle"
-               />
-            <TextView
-                android:id="@+id/spamDetectorFragmentSubTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Detect Flippers and other BLE Spamming Devices"
-                android:textStyle="italic"
-                android:textColor="@color/text_color"
-                app:layout_constraintBottom_toBottomOf="@id/spamDetectorTopLayout"
-               />
-
-            <ImageButton
-                android:id="@+id/spamDetectorToggleButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:layout_constraintEnd_toEndOf="@id/spamDetectorTopLayout"
-                app:layout_constraintBottom_toBottomOf="@id/spamDetectorTopLayout"
-                android:src="@drawable/play_arrow"
-                app:tint="@color/foreground_color_rounded_button"
-                android:background="@drawable/roundedbutton"
-                android:scaleType="center" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:padding="10dp"
-        android:id="@+id/spamDetectorCenterLayout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.20"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/spamDetectorTopLayout">
+        android:padding="@dimen/screen_padding">
 
         <TextView
-            android:id="@+id/spamDetectorFlipperListTitle"
+            android:id="@+id/spamDetectorFragmentTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Flipper Zero Devices"
-            android:textStyle="bold"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/textSizeHeadline3"
-            app:layout_constraintTop_toTopOf="@id/spamDetectorCenterLayout"
-            />
-        <!--
-        <ListView
-            android:id="@+id/spamDetectionFlipperDevicesList"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/spamDetectorFlipperListTitle"
-            app:layout_constraintBottom_toBottomOf="@id/spamDetectorCenterLayout"/>-->
+            android:text="@string/detector_screen_title"
+            android:textAppearance="@style/TextAppearance.BleAdvertiser.Headline"
+            android:textColor="?attr/colorOnSurface" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/spamDetectionFlipperDevicesList"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/spamDetectorFlipperListTitle"
-            app:layout_constraintBottom_toBottomOf="@id/spamDetectorCenterLayout"
-            tools:itemCount="1"
-            tools:listitem="@layout/list_item_flipper_device_scan_result" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:padding="10dp"
-        android:id="@+id/spamDetectorBottomLayout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.48"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@id/spamDetectorLayout">
         <TextView
-            android:id="@+id/spamDetectorSpamListTitle"
+            android:id="@+id/spamDetectorFragmentSubTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Spam Packages"
-            android:textStyle="bold"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/textSizeHeadline3"
-            app:layout_constraintTop_toTopOf="@id/spamDetectorBottomLayout" />
+            android:layout_marginTop="8dp"
+            android:text="@string/detector_screen_description"
+            android:textAppearance="@style/TextAppearance.BleAdvertiser.Body"
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
-        <!--
-        <ListView
-            android:id="@+id/spamDetectionSpamPackageList"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/spamDetectorTopLayout"
+            style="@style/Widget.BleAdvertiser.Card"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/spamDetectorSpamListTitle"
-            app:layout_constraintBottom_toBottomOf="@id/spamDetectorBottomLayout"/>-->
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/section_spacing">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/spamDetectionSpamPackageList"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/spamDetectionAnimation"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginEnd="16dp"
+                    android:importantForAccessibility="no"
+                    android:padding="4dp"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/detect" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/spamDetectorStatusText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:accessibilityLiveRegion="polite"
+                        android:text="@string/detector_status_stopped"
+                        android:textAppearance="@style/TextAppearance.BleAdvertiser.Title"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <TextView
+                        android:id="@+id/spamDetectorStatusDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/detector_status_stopped_description"
+                        android:textAppearance="@style/TextAppearance.BleAdvertiser.Body"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/spamDetectorToggleButton"
+                        style="@style/Widget.BleAdvertiser.Button.Primary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:minWidth="120dp"
+                        android:text="@string/detector_start"
+                        app:icon="@drawable/play_arrow"
+                        app:iconGravity="textStart"
+                        app:iconTint="?attr/colorOnPrimary" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/spamDetectorCenterLayout"
+            style="@style/Widget.BleAdvertiser.Card.Outlined"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/spamDetectorSpamListTitle"
-            app:layout_constraintBottom_toBottomOf="@id/spamDetectorBottomLayout"
-            tools:itemCount="1"
-            tools:listitem="@layout/list_item_spam_package_scan_result" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/section_spacing">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
+                <TextView
+                    android:id="@+id/spamDetectorFlipperListTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detector_flipper_section_title"
+                    android:textAppearance="@style/TextAppearance.BleAdvertiser.Title"
+                    android:textColor="?attr/colorOnSurface" />
 
+                <TextView
+                    android:id="@+id/spamDetectorFlipperEmptyText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:accessibilityLiveRegion="polite"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:text="@string/detector_flipper_empty_idle"
+                    android:textAppearance="@style/TextAppearance.BleAdvertiser.Body"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/spamDetectionFlipperDevicesList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="1"
+                    tools:listitem="@layout/list_item_flipper_device_scan_result" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/spamDetectorBottomLayout"
+            style="@style/Widget.BleAdvertiser.Card.Outlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/section_spacing">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/spamDetectorSpamListTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detector_packages_section_title"
+                    android:textAppearance="@style/TextAppearance.BleAdvertiser.Title"
+                    android:textColor="?attr/colorOnSurface" />
+
+                <TextView
+                    android:id="@+id/spamDetectorPackagesEmptyText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:accessibilityLiveRegion="polite"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:text="@string/detector_packages_empty_idle"
+                    android:textAppearance="@style/TextAppearance.BleAdvertiser.Body"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/spamDetectionSpamPackageList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="1"
+                    tools:listitem="@layout/list_item_spam_package_scan_result" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
