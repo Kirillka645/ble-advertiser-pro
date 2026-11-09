@@ -9,7 +9,8 @@
             app:key="@string/preference_key_use_legacy_advertising"
             app:title="@string/settings_ui_legacy_advertising_title"
             app:summary="@string/settings_ui_legacy_advertising_summary"
-            app:defaultValue="true" />
+            app:defaultValue="true"
+            app:widgetLayout="@layout/preference_material_switch" />
 
         <EditTextPreference
             android:defaultValue="1000"
@@ -25,7 +26,8 @@
             app:key="@string/preference_key_burst_mode"
             app:title="@string/settings_ui_burst_mode_title"
             app:summary="@string/settings_ui_burst_mode_summary"
-            app:defaultValue="false" />
+            app:defaultValue="false"
+            app:widgetLayout="@layout/preference_material_switch" />
 
         <EditTextPreference
             android:defaultValue="0"
@@ -45,7 +47,8 @@
             app:key="@string/preference_key_use_dynamic_colors"
             app:title="@string/settings_ui_dynamic_colors_title"
             app:summary="@string/settings_ui_dynamic_colors_summary"
-            app:defaultValue="true" />
+            app:defaultValue="true"
+            app:widgetLayout="@layout/preference_material_switch" />
 
         <ListPreference
             app:key="theme_mode"
@@ -62,6 +65,7 @@
             app:key="@string/preference_key_enable_logging"
             app:title="@string/settings_ui_logging_title"
             app:summary="@string/settings_ui_logging_summary"
-            app:defaultValue="false" />
+            app:defaultValue="false"
+            app:widgetLayout="@layout/preference_material_switch" />
     </PreferenceCategory>
 </PreferenceScreen>
