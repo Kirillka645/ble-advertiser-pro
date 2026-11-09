@@ -8,6 +8,8 @@
 
     <ImageView
         android:id="@+id/advertisementForegroundServiceNotificationTargetImageView"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:padding="10dp"
@@ -29,7 +31,7 @@
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/color_title"
-            android:textSize="18dp"
+            android:textSize="18sp"
             tools:text="Title" />
 
         <TextView
@@ -41,13 +43,14 @@
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/color_subtitle"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:textStyle="italic"
             tools:text="Subtitle" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/advertisementForegroundServiceNotificationStopImageView"
+        android:contentDescription="@string/session_stop"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:padding="10dp"
@@ -56,6 +59,7 @@
 
     <ImageView
         android:id="@+id/advertisementForegroundServiceNotificationToggleImageView"
+        android:contentDescription="@string/session_pause"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:padding="10dp"

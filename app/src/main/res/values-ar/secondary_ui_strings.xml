@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="collection_screen_title">مجموعات الإعلانات</string>
+    <string name="collection_screen_description">اختر مجموعة لعرض الحزم المتاحة فيها.</string>
+    <string name="collection_fast_pair_hint">تم إصلاح Fast Pair على الأجهزة الحديثة. لم تعد هذه الميزة مدعومة.</string>
+    <string name="collection_continuity_hint">في iOS 18 والإصدارات الأحدث، لا تتعطّل الأجهزة، لكن قد تستمر النوافذ المنبثقة في الظهور.</string>
+    <string name="collection_fast_pair_title">Fast Pair</string>
+    <string name="collection_continuity_title">Continuity</string>
+    <string name="collection_easy_setup_title">Easy Setup</string>
+    <string name="collection_swift_pair_title">Swift Pair</string>
+    <string name="collection_lovespouse_title">Lovespouse</string>
+    <string name="collection_kitchen_sink_title">كل الطرق</string>
+    <string name="collection_target_android">الهدف: Android</string>
+    <string name="collection_target_ios">الهدف: iOS</string>
+    <string name="collection_target_samsung">الهدف: Samsung</string>
+    <string name="collection_target_windows">الهدف: Windows</string>
+    <string name="collection_target_lovespouse">الهدف: Lovespouse</string>
+    <string name="collection_target_all">الهدف: جميع المنصات</string>
+    <string name="collection_distance_close">النطاق: قريب</string>
+    <string name="collection_distance_mixed">النطاق: متنوع</string>
+    <string name="collection_distance_far">النطاق: بعيد</string>
+
+    <string name="detector_screen_title">كاشف الرسائل المزعجة</string>
+    <string name="detector_screen_description">ابحث عن أجهزة Flipper Zero القريبة وحزم إعلانات BLE المعروفة.</string>
+    <string name="detector_status_stopped">الاكتشاف متوقف</string>
+    <string name="detector_status_stopped_description">ابدأ الاكتشاف للبحث عن الأجهزة والحزم القريبة.</string>
+    <string name="detector_status_running">جارٍ الاكتشاف</string>
+    <string name="detector_status_running_description">جارٍ البحث عن أجهزة Flipper Zero القريبة وحزم إعلانات BLE المعروفة.</string>
+    <string name="detector_start">بدء الاكتشاف</string>
+    <string name="detector_stop">إيقاف الاكتشاف</string>
+    <string name="detector_flipper_section_title">أجهزة Flipper Zero</string>
+    <string name="detector_packages_section_title">حزم الإعلانات المكتشفة</string>
+    <string name="detector_flipper_empty_idle">لا توجد أجهزة بعد. ابدأ الاكتشاف للبحث عن الأجهزة القريبة.</string>
+    <string name="detector_flipper_empty_scanning">لم يتم اكتشاف أجهزة Flipper Zero بعد.</string>
+    <string name="detector_packages_empty_idle">لا توجد حزم بعد. ابدأ الاكتشاف للبحث عن إعلانات BLE المعروفة.</string>
+    <string name="detector_packages_empty_scanning">لم يتم اكتشاف حزم بعد.</string>
+</resources>

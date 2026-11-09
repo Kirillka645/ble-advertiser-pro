@@ -1,71 +1,72 @@
 package io.github.kirillka645.bleadvertiserpro
 
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
+import android.content.res.Configuration
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.DocumentsContract
-import android.util.Log
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.FileProvider
-import androidx.documentfile.provider.DocumentFile
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
-import io.github.kirillka645.bleadvertiserpro.Helpers.LogDirectoryPicker
-import io.github.kirillka645.bleadvertiserpro.Helpers.LogFileManager
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import com.google.android.material.appbar.MaterialToolbar
+import io.github.kirillka645.bleadvertiserpro.ui.preferences.PreferencesFragment
 
 class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        configureEdgeToEdge()
         setContentView(R.layout.settings_activity)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.settings_root)) { view, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            view.setPadding(bars.left, bars.top, bars.right, maxOf(bars.bottom, ime.bottom))
+            insets
+        }
+        ViewCompat.requestApplyInsets(findViewById(R.id.settings_root))
+
+        val toolbar = findViewById<MaterialToolbar>(R.id.settings_toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            title = getString(R.string.settings_ui_title)
+        }
+
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.settings, SettingsFragment())
+                .replace(R.id.settings, PreferencesFragment())
                 .commit()
         }
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    class SettingsFragment : PreferenceFragmentCompat() {
-        private val logFileManager = LogFileManager.getInstance(requireContext())
-        private lateinit var logDirectoryPicker: LogDirectoryPicker
-        private lateinit var directoryPickerLauncher: ActivityResultLauncher<Intent>
+    private fun configureEdgeToEdge() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.statusBarColor = Color.TRANSPARENT
+        window.navigationBarColor = Color.TRANSPARENT
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            logDirectoryPicker = LogDirectoryPicker(requireActivity())
-            logFileManager.initialize(requireContext())
-            directoryPickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let { uri ->
-                        logDirectoryPicker.handleResult(uri)
-                    }
-                }
-            }
-            logDirectoryPicker.initialize(directoryPickerLauncher)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isStatusBarContrastEnforced = false
+            window.isNavigationBarContrastEnforced = false
         }
 
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.root_preferences, rootKey)
-
-            findPreference<SwitchPreferenceCompat>("enable_logging")?.setOnPreferenceChangeListener { _, newValue ->
-                if (newValue as Boolean) {
-                    logDirectoryPicker.pickDirectory { directory ->
-                        logFileManager.setCustomLogDirectory(directory, requireContext())
-                        logFileManager.initializeLogFile(requireContext())
-                    }
-                } else {
-                    logFileManager.disableLogging(requireContext())
-                }
-                true
-            }
+        val isLightTheme =
+            (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) !=
+                Configuration.UI_MODE_NIGHT_YES
+        WindowInsetsControllerCompat(window, window.decorView).apply {
+            isAppearanceLightStatusBars = isLightTheme
+            isAppearanceLightNavigationBars = isLightTheme
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
     }
 }

@@ -2,12 +2,15 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="Advertising Settings">
+    <PreferenceCategory
+        android:title="@string/settings_ui_category_advertising"
+        app:iconSpaceReserved="false">
         <SwitchPreferenceCompat
             app:key="@string/preference_key_use_legacy_advertising"
-            app:title="@string/preference_title_use_legacy_advertising"
-            app:summary="@string/preference_summary_use_legacy_advertising"
-            app:defaultValue="true" />
+            app:title="@string/settings_ui_legacy_advertising_title"
+            app:summary="@string/settings_ui_legacy_advertising_summary"
+            app:defaultValue="true"
+            app:widgetLayout="@layout/preference_material_switch" />
 
         <EditTextPreference
             android:defaultValue="1000"
@@ -16,14 +19,15 @@
             android:key="@string/preference_key_interval_advertising_queue_handler"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:summary="Duration of an Advertisement in Milliseconds. Recommended: 1000 - 10000"
-            android:title="Advertisement Duration (ms)" />
+            android:summary="@string/settings_ui_advertising_duration_summary"
+            android:title="@string/settings_ui_advertising_duration_title" />
 
         <SwitchPreferenceCompat
             app:key="@string/preference_key_burst_mode"
-            app:title="@string/preference_title_burst_mode"
-            app:summary="@string/preference_summary_burst_mode"
-            app:defaultValue="false" />
+            app:title="@string/settings_ui_burst_mode_title"
+            app:summary="@string/settings_ui_burst_mode_summary"
+            app:defaultValue="false"
+            app:widgetLayout="@layout/preference_material_switch" />
 
         <EditTextPreference
             android:defaultValue="0"
@@ -32,31 +36,36 @@
             android:key="@string/preference_key_auto_stop_minutes"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:summary="@string/preference_summary_auto_stop_minutes"
-            android:title="@string/preference_title_auto_stop_minutes" />
+            android:summary="@string/settings_ui_auto_stop_summary"
+            android:title="@string/settings_ui_auto_stop_title" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Appearance">
+    <PreferenceCategory
+        android:title="@string/settings_ui_category_appearance"
+        app:iconSpaceReserved="false">
         <SwitchPreferenceCompat
             app:key="@string/preference_key_use_dynamic_colors"
-            app:title="@string/preference_title_use_dynamic_colors"
-            app:summary="@string/preference_summary_use_dynamic_colors"
-            app:defaultValue="true" />
+            app:title="@string/settings_ui_dynamic_colors_title"
+            app:summary="@string/settings_ui_dynamic_colors_summary"
+            app:defaultValue="true"
+            app:widgetLayout="@layout/preference_material_switch" />
 
         <ListPreference
             app:key="theme_mode"
-            app:title="@string/preference_theme_mode"
+            app:title="@string/settings_ui_theme_title"
             app:entries="@array/theme_mode_entries"
             app:entryValues="@array/theme_mode_values"
             app:defaultValue="default" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Debug Settings">
+    <PreferenceCategory
+        android:title="@string/settings_ui_category_logging"
+        app:iconSpaceReserved="false">
         <SwitchPreferenceCompat
             app:key="@string/preference_key_enable_logging"
-            app:title="@string/preference_title_enable_logging"
-            app:summary="@string/preference_summary_enable_logging"
-            app:defaultValue="false" />
+            app:title="@string/settings_ui_logging_title"
+            app:summary="@string/settings_ui_logging_summary"
+            app:defaultValue="false"
+            app:widgetLayout="@layout/preference_material_switch" />
     </PreferenceCategory>
-
 </PreferenceScreen>

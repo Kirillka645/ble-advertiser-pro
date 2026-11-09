@@ -3,43 +3,106 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:title="General Settings"
+        android:title="@string/settings_ui_category_general"
         app:iconSpaceReserved="false">
 
         <SwitchPreferenceCompat
             android:key="enable_logging"
-            android:title="Enable Logging"
-            android:summary="Enable application logging"
-            app:iconSpaceReserved="false" />
+            android:title="@string/settings_ui_logging_title"
+            android:summary="@string/settings_ui_logging_summary"
+            app:iconSpaceReserved="false"
+            app:widgetLayout="@layout/preference_material_switch" />
 
         <SwitchPreferenceCompat
             android:key="enable_notifications"
-            android:title="Enable Notifications"
-            android:summary="Show notifications for important events"
-            app:iconSpaceReserved="false" />
-
+            android:title="@string/settings_ui_notifications_title"
+            android:summary="@string/settings_ui_notifications_summary"
+            app:iconSpaceReserved="false"
+            app:widgetLayout="@layout/preference_material_switch" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Advanced Settings"
+        android:title="@string/settings_ui_category_advanced"
         app:iconSpaceReserved="false">
 
         <EditTextPreference
             android:key="scan_interval"
-            android:title="Scan Interval"
-            android:summary="Set the interval for BLE scanning (in seconds)"
+            android:title="@string/settings_ui_scan_interval_title"
+            android:summary="@string/settings_ui_scan_interval_summary"
             android:defaultValue="30"
             app:iconSpaceReserved="false" />
 
         <ListPreference
             android:key="scan_mode"
-            android:title="Scan Mode"
-            android:summary="Select the BLE scan mode"
-            android:entries="@array/scan_mode_entries"
+            android:title="@string/settings_ui_scan_mode_title"
+            android:summary="@string/settings_ui_scan_mode_summary"
+            android:entries="@array/settings_ui_scan_mode_entries"
             android:entryValues="@array/scan_mode_values"
             android:defaultValue="balanced"
             app:iconSpaceReserved="false" />
-
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/settings_ui_category_advertising"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            android:key="@string/preference_key_use_legacy_advertising"
+            android:title="@string/settings_ui_legacy_advertising_title"
+            android:summary="@string/settings_ui_legacy_advertising_summary"
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"
+            app:widgetLayout="@layout/preference_material_switch" />
+
+        <EditTextPreference
+            android:key="@string/preference_key_interval_advertising_queue_handler"
+            android:title="@string/settings_ui_advertising_duration_title"
+            android:summary="@string/settings_ui_advertising_duration_summary"
+            android:defaultValue="1000"
+            android:digits="0123456789"
+            android:inputType="number|numberDecimal"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            android:key="@string/preference_key_burst_mode"
+            android:title="@string/settings_ui_burst_mode_title"
+            android:summary="@string/settings_ui_burst_mode_summary"
+            android:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:widgetLayout="@layout/preference_material_switch" />
+
+        <EditTextPreference
+            android:key="@string/preference_key_auto_stop_minutes"
+            android:title="@string/settings_ui_auto_stop_title"
+            android:summary="@string/settings_ui_auto_stop_summary"
+            android:defaultValue="0"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/settings_ui_category_appearance"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            android:key="@string/preference_key_use_dynamic_colors"
+            android:title="@string/settings_ui_dynamic_colors_title"
+            android:summary="@string/settings_ui_dynamic_colors_summary"
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"
+            app:widgetLayout="@layout/preference_material_switch" />
+
+        <ListPreference
+            android:key="theme_mode"
+            android:title="@string/settings_ui_theme_title"
+            android:entries="@array/theme_mode_entries"
+            android:entryValues="@array/theme_mode_values"
+            android:defaultValue="default"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
 </PreferenceScreen>

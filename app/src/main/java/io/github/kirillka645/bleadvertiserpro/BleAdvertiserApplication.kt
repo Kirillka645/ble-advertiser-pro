@@ -11,7 +11,6 @@ import io.github.kirillka645.bleadvertiserpro.Interfaces.Services.IAdvertisement
 import io.github.kirillka645.bleadvertiserpro.Interfaces.Services.IBluetoothLeScanService
 import io.github.kirillka645.bleadvertiserpro.Services.BluetoothLeScanService
 
-
 class BleAdvertiserApplication : Application() {
 
     lateinit var advertisementService: IAdvertisementService
@@ -23,12 +22,19 @@ class BleAdvertiserApplication : Application() {
     lateinit var scanService: IBluetoothLeScanService
         private set
 
-    override fun onCreate() {
-        ThemeManager.getInstance().applyTheme(this)
+    private val dynamicColorsOptions = DynamicColorsOptions.Builder()
+        .setPrecondition { activity, _ ->
+            val key = activity.getString(R.string.preference_key_use_dynamic_colors)
+            PreferenceManager.getDefaultSharedPreferences(activity)
+                .getBoolean(key, true)
+        }
+        .build()
 
+    override fun onCreate() {
         super.onCreate()
 
-        applyDynamicColorsIfEnabled()
+        ThemeManager.getInstance().applyTheme(this)
+        DynamicColors.applyToActivitiesIfAvailable(this, dynamicColorsOptions)
 
         setupAdvertisementService()
         scanService = BluetoothLeScanService(this)
@@ -37,17 +43,5 @@ class BleAdvertiserApplication : Application() {
     fun setupAdvertisementService() {
         advertisementService = BluetoothHelpers.getAdvertisementService(this)
         queueHandler = AdvertisementSetQueueHandler(this, advertisementService)
-    }
-
-    private fun applyDynamicColorsIfEnabled() {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val key = getString(R.string.preference_key_use_dynamic_colors)
-        val enabled = prefs.getBoolean(key, true)
-        if (enabled) {
-            DynamicColors.applyToActivitiesIfAvailable(
-                this,
-                DynamicColorsOptions.Builder().build()
-            )
-        }
     }
 }

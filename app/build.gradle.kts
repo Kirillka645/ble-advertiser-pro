@@ -12,13 +12,14 @@ val app_name = "BLE Advertiser Pro"
 android {
     namespace = "io.github.kirillka645.bleadvertiserpro"
     compileSdk = 36
+    buildToolsVersion = "36.0.0"
 
     defaultConfig {
         applicationId = "io.github.kirillka645.bleadvertiserpro"
         minSdk = 26
         targetSdk = compileSdk
-        versionCode = 3
-        versionName = "1.0.9"
+        versionCode = 4
+        versionName = "1.0.10"
     }
 
     signingConfigs {
@@ -31,11 +32,10 @@ android {
     }
 
     buildTypes {
-        configureEach {
-            val variant = if (File("release.jks").exists()) "release" else "debug"
-            signingConfig = signingConfigs[variant]
-        }
         release {
+            if (file("release.jks").isFile) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             resValue("string", "app_name", app_name)
             isMinifyEnabled = false
             proguardFiles(

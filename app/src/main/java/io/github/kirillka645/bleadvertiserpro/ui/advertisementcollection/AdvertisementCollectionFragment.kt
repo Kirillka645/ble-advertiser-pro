@@ -5,10 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.cardview.widget.CardView
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -16,35 +12,31 @@ import io.github.kirillka645.bleadvertiserpro.BleAdvertiserApplication
 import io.github.kirillka645.bleadvertiserpro.Enums.AdvertisementQueueMode
 import io.github.kirillka645.bleadvertiserpro.Enums.AdvertisementSetType
 import io.github.kirillka645.bleadvertiserpro.Enums.AdvertisementTarget
+import io.github.kirillka645.bleadvertiserpro.Enums.getDrawableId
 import io.github.kirillka645.bleadvertiserpro.Enums.stringResId
 import io.github.kirillka645.bleadvertiserpro.Helpers.DatabaseHelpers
 import io.github.kirillka645.bleadvertiserpro.Models.AdvertisementSetCollection
 import io.github.kirillka645.bleadvertiserpro.Models.AdvertisementSetList
 import io.github.kirillka645.bleadvertiserpro.R
 import io.github.kirillka645.bleadvertiserpro.databinding.FragmentAdvertisementCollectionBinding
+import io.github.kirillka645.bleadvertiserpro.databinding.ListitemAdvertisementCollectionStartBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
+import kotlinx.coroutines.withContext
 
 class AdvertisementCollectionFragment : Fragment() {
 
-    private val _logTag = "AdvertisementCollectionFragment"
     private var _binding: FragmentAdvertisementCollectionBinding? = null
-
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-
+    ): View {
         _binding = FragmentAdvertisementCollectionBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
         setupAdvertisementSetCollectionListView()
-
-        return root
+        return binding.root
     }
 
     override fun onDestroyView() {
@@ -52,7 +44,7 @@ class AdvertisementCollectionFragment : Fragment() {
         _binding = null
     }
 
-    fun setupAdvertisementSetCollectionListView() {
+    private fun setupAdvertisementSetCollectionListView() {
         listOf(
             AdvertisementTarget.ADVERTISEMENT_TARGET_ANDROID,
             AdvertisementTarget.ADVERTISEMENT_TARGET_IOS,
@@ -60,159 +52,94 @@ class AdvertisementCollectionFragment : Fragment() {
             AdvertisementTarget.ADVERTISEMENT_TARGET_WINDOWS,
             AdvertisementTarget.ADVERTISEMENT_TARGET_LOVESPOUSE,
             AdvertisementTarget.ADVERTISEMENT_TARGET_KITCHEN_SINK
-        ).forEach { target -> setupAdvertisementTarget(target) }
+        ).forEach(::setupAdvertisementTarget)
     }
 
-    fun setupAdvertisementTarget(advertisementTarget: AdvertisementTarget) {
-        // Get Layout View
-        val advertisementSetCollectionView: View =
-            layoutInflater.inflate(R.layout.listitem_advertisement_collection_start, null)
-        val context = advertisementSetCollectionView.context
-
-        // Insert Data
-        var titleTextView: TextView =
-            advertisementSetCollectionView.findViewById(R.id.listItemAdvertisementSetCollectionStartTitle)
-        var targetTextView: TextView =
-            advertisementSetCollectionView.findViewById(R.id.listItemAdvertisementSetCollectionStartTarget)
-        var distanceTextView: TextView =
-            advertisementSetCollectionView.findViewById(R.id.listItemAdvertisementSetCollectionStartDistance)
-        var iconImageView: ImageView =
-            advertisementSetCollectionView.findViewById(R.id.listItemAdvertisementSetCollectionStartImage)
-
-        when (advertisementTarget) {
-            AdvertisementTarget.ADVERTISEMENT_TARGET_ANDROID -> {
-                titleTextView.text = "Fast Pair"
-                targetTextView.text = "Target: Android"
-                distanceTextView.text = "Distance: Close"
-                iconImageView.setImageDrawable(
-                    ResourcesCompat.getDrawable(resources, R.drawable.ic_android, context.theme)
-                )
-            }
-
-            AdvertisementTarget.ADVERTISEMENT_TARGET_IOS -> {
-                titleTextView.text = "Continuity"
-                targetTextView.text = "Target: iOS"
-                distanceTextView.text = "Distance: Mixed"
-                iconImageView.setImageDrawable(
-                    ResourcesCompat.getDrawable(resources, R.drawable.apple, context.theme)
-                )
-            }
-
-            AdvertisementTarget.ADVERTISEMENT_TARGET_SAMSUNG -> {
-                titleTextView.text = "Easy Setup"
-                targetTextView.text = "Target: Samsung"
-                distanceTextView.text = "Distance: Close"
-                iconImageView.setImageDrawable(
-                    ResourcesCompat.getDrawable(resources, R.drawable.samsung, context.theme)
-                )
-            }
-
-            AdvertisementTarget.ADVERTISEMENT_TARGET_WINDOWS -> {
-                titleTextView.text = "Swift Pair"
-                targetTextView.text = "Target: Windows"
-                distanceTextView.text = "Distance: Close"
-                iconImageView.setImageDrawable(
-                    ResourcesCompat.getDrawable(resources, R.drawable.microsoft, context.theme)
-                )
-            }
-
-            AdvertisementTarget.ADVERTISEMENT_TARGET_KITCHEN_SINK -> {
-                titleTextView.text = "Kitchen Sink"
-                targetTextView.text = "Target: All"
-                distanceTextView.text = "Distance: Mixed"
-                iconImageView.setImageDrawable(
-                    ResourcesCompat.getDrawable(resources, R.drawable.shuffle, context.theme)
-                )
-            }
-
-            AdvertisementTarget.ADVERTISEMENT_TARGET_UNDEFINED -> {
-                titleTextView.text = "Undefined"
-                targetTextView.text = "Target: undefined"
-                distanceTextView.text = "Distance: Undefined"
-                iconImageView.setImageDrawable(
-                    ResourcesCompat.getDrawable(resources, R.drawable.ic_info, context.theme)
-                )
-            }
-
-            AdvertisementTarget.ADVERTISEMENT_TARGET_LOVESPOUSE -> {
-                titleTextView.text = "Lovespouse"
-                targetTextView.text = "Target: Lovespouse"
-                distanceTextView.text = "Distance: Far"
-                iconImageView.setImageDrawable(
-                    ResourcesCompat.getDrawable(resources, R.drawable.heart, context.theme)
-                )
-            }
+    private fun setupAdvertisementTarget(advertisementTarget: AdvertisementTarget) {
+        val itemBinding = ListitemAdvertisementCollectionStartBinding.inflate(
+            layoutInflater,
+            binding.advertisementCollectionListView,
+            false
+        )
+        val (titleRes, targetRes, distanceRes) = when (advertisementTarget) {
+            AdvertisementTarget.ADVERTISEMENT_TARGET_ANDROID -> Triple(
+                R.string.collection_fast_pair_title,
+                R.string.collection_target_android,
+                R.string.collection_distance_close
+            )
+            AdvertisementTarget.ADVERTISEMENT_TARGET_IOS -> Triple(
+                R.string.collection_continuity_title,
+                R.string.collection_target_ios,
+                R.string.collection_distance_mixed
+            )
+            AdvertisementTarget.ADVERTISEMENT_TARGET_SAMSUNG -> Triple(
+                R.string.collection_easy_setup_title,
+                R.string.collection_target_samsung,
+                R.string.collection_distance_close
+            )
+            AdvertisementTarget.ADVERTISEMENT_TARGET_WINDOWS -> Triple(
+                R.string.collection_swift_pair_title,
+                R.string.collection_target_windows,
+                R.string.collection_distance_close
+            )
+            AdvertisementTarget.ADVERTISEMENT_TARGET_LOVESPOUSE -> Triple(
+                R.string.collection_lovespouse_title,
+                R.string.collection_target_lovespouse,
+                R.string.collection_distance_far
+            )
+            AdvertisementTarget.ADVERTISEMENT_TARGET_KITCHEN_SINK -> Triple(
+                R.string.collection_kitchen_sink_title,
+                R.string.collection_target_all,
+                R.string.collection_distance_mixed
+            )
+            AdvertisementTarget.ADVERTISEMENT_TARGET_UNDEFINED -> return
         }
 
-        // Hookup Events
-        var cardView: CardView =
-            advertisementSetCollectionView.findViewById(R.id.listItemAdvertisementSetCollectionStartCardview)
-        cardView.setOnClickListener { view ->
+        itemBinding.listItemAdvertisementSetCollectionStartTitle.setText(titleRes)
+        itemBinding.listItemAdvertisementSetCollectionStartTarget.setText(targetRes)
+        itemBinding.listItemAdvertisementSetCollectionStartDistance.setText(distanceRes)
+        itemBinding.listItemAdvertisementSetCollectionStartImage
+            .setImageResource(advertisementTarget.getDrawableId())
+        itemBinding.listItemAdvertisementSetCollectionStartCardview.setOnClickListener { view ->
             when (advertisementTarget) {
-                AdvertisementTarget.ADVERTISEMENT_TARGET_ANDROID -> {
-                    onFastPairCardViewClicked()
-                }
-
-                AdvertisementTarget.ADVERTISEMENT_TARGET_IOS -> {
-                    onContinuityCardViewClicked()
-                }
-
-                AdvertisementTarget.ADVERTISEMENT_TARGET_SAMSUNG -> {
-                    onEasySetupCardViewClicked()
-                }
-
-                AdvertisementTarget.ADVERTISEMENT_TARGET_WINDOWS -> {
-                    onSwiftPairingCardViewClicked()
-                }
-
-                AdvertisementTarget.ADVERTISEMENT_TARGET_KITCHEN_SINK -> {
+                AdvertisementTarget.ADVERTISEMENT_TARGET_ANDROID -> onFastPairCardViewClicked()
+                AdvertisementTarget.ADVERTISEMENT_TARGET_IOS -> onContinuityCardViewClicked()
+                AdvertisementTarget.ADVERTISEMENT_TARGET_SAMSUNG -> onEasySetupCardViewClicked()
+                AdvertisementTarget.ADVERTISEMENT_TARGET_WINDOWS -> onSwiftPairingCardViewClicked()
+                AdvertisementTarget.ADVERTISEMENT_TARGET_LOVESPOUSE -> onLovespouseCardViewClicked()
+                AdvertisementTarget.ADVERTISEMENT_TARGET_KITCHEN_SINK ->
                     onKitchenSinkCardViewClicked(view.context)
-                }
-
-                AdvertisementTarget.ADVERTISEMENT_TARGET_LOVESPOUSE -> {
-                    onLovespouseCardViewClicked()
-                }
-
-                else -> {
-                    // Ignore
-                }
+                AdvertisementTarget.ADVERTISEMENT_TARGET_UNDEFINED -> Unit
             }
         }
 
-        // Add to Parent View
-        binding.advertisementCollectionListView.addView(advertisementSetCollectionView)
+        binding.advertisementCollectionListView.addView(itemBinding.root)
     }
 
-    fun navigateToAdvertisementFragmentWithType(
+    private fun navigateToAdvertisementFragmentWithType(
         advertisementSetTypes: List<AdvertisementSetType>,
         advertisementSetCollectionTitle: String
     ) {
-        // TODO: Move this work into a ViewModel
-        lifecycleScope.launch(Dispatchers.IO) {
-            // Run database work in background
-            val advertisementSetCollection =
+        viewLifecycleOwner.lifecycleScope.launch {
+            val advertisementSetCollection = withContext(Dispatchers.IO) {
                 buildAdvertisementCollection(advertisementSetTypes, advertisementSetCollectionTitle)
-
-            activity?.let { ac ->
-                ac.runOnUiThread {
-                    // Pass Collection to Advertisement Fragment
-                    val navController = ac.findNavController(R.id.nav_host_fragment)
-                    (ac.applicationContext as BleAdvertiserApplication).queueHandler.apply {
-                        deactivate(ac)
-                        setAdvertisementSetCollection(advertisementSetCollection)
-                    }
-                    navController.navigate(R.id.action_ad_coll_to_ad)
-                }
             }
+
+            val hostActivity = activity ?: return@launch
+            (hostActivity.applicationContext as BleAdvertiserApplication).queueHandler.apply {
+                deactivate(hostActivity)
+                setAdvertisementSetCollection(advertisementSetCollection)
+            }
+            hostActivity.findNavController(R.id.nav_host_fragment)
+                .navigate(R.id.action_ad_coll_to_ad)
         }
     }
 
-    fun buildAdvertisementCollection(
+    private fun buildAdvertisementCollection(
         advertisementSetTypes: List<AdvertisementSetType>,
         advertisementSetCollectionTitle: String
     ): AdvertisementSetCollection {
-        // Initialize the Collection
-        var advertisementSetCollection = AdvertisementSetCollection()
+        val advertisementSetCollection = AdvertisementSetCollection()
         advertisementSetCollection.title = advertisementSetCollectionTitle
 
         if (advertisementSetTypes.contains(AdvertisementSetType.ADVERTISEMENT_TYPE_FAST_PAIRING_DEVICE) ||
@@ -220,50 +147,53 @@ class AdvertisementCollectionFragment : Fragment() {
             advertisementSetTypes.contains(AdvertisementSetType.ADVERTISEMENT_TYPE_FAST_PAIRING_NON_PRODUCTION) ||
             advertisementSetTypes.contains(AdvertisementSetType.ADVERTISEMENT_TYPE_FAST_PAIRING_DEBUG)
         ) {
-            advertisementSetCollection.hints.add("Fast Pairing is patched on all modern devices due to this we no longer offer support for this feature")
+            advertisementSetCollection.hints.add(
+                getString(R.string.collection_fast_pair_hint)
+            )
         }
 
         if (advertisementSetTypes.contains(AdvertisementSetType.ADVERTISEMENT_TYPE_CONTINUITY_IOS_17_CRASH)) {
-            advertisementSetCollection.hints.add("Devices on iOS 18 or above will not crash but still get pop-ups")
+            advertisementSetCollection.hints.add(
+                getString(R.string.collection_continuity_hint)
+            )
         }
 
         advertisementSetTypes.forEach { advertisementSetType ->
-            // Initialize the List
             val advertisementSetList = AdvertisementSetList()
-            advertisementSetList.title = "${getString(advertisementSetType.stringResId())} List"
+            advertisementSetList.title = getString(advertisementSetType.stringResId())
 
             val advertisementSets =
                 DatabaseHelpers.getAllAdvertisementSetsForType(advertisementSetType)
             advertisementSetList.advertisementSets = advertisementSets.toMutableList()
-
-            // Add List to the Collection
             advertisementSetCollection.advertisementSetLists.add(advertisementSetList)
         }
 
         return advertisementSetCollection
     }
 
-    fun onFastPairCardViewClicked() {
+    private fun onFastPairCardViewClicked() {
         navigateToAdvertisementFragmentWithType(
             listOf(
                 AdvertisementSetType.ADVERTISEMENT_TYPE_FAST_PAIRING_DEVICE,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_FAST_PAIRING_PHONE_SETUP,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_FAST_PAIRING_NON_PRODUCTION,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_FAST_PAIRING_DEBUG
-            ), "Fast Pair Collection"
+            ),
+            getString(R.string.collection_fast_pair_title)
         )
     }
 
-    fun onEasySetupCardViewClicked() {
+    private fun onEasySetupCardViewClicked() {
         navigateToAdvertisementFragmentWithType(
             listOf(
                 AdvertisementSetType.ADVERTISEMENT_TYPE_EASY_SETUP_WATCH,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_EASY_SETUP_BUDS
-            ), "Easy Setup Collection"
+            ),
+            getString(R.string.collection_easy_setup_title)
         )
     }
 
-    fun onContinuityCardViewClicked() {
+    private fun onContinuityCardViewClicked() {
         navigateToAdvertisementFragmentWithType(
             listOf(
                 AdvertisementSetType.ADVERTISEMENT_TYPE_CONTINUITY_NEW_DEVICE,
@@ -271,28 +201,29 @@ class AdvertisementCollectionFragment : Fragment() {
                 AdvertisementSetType.ADVERTISEMENT_TYPE_CONTINUITY_NEW_AIRTAG,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_CONTINUITY_ACTION_MODALS,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_CONTINUITY_IOS_17_CRASH
-            ), "Continuity Collection"
+            ),
+            getString(R.string.collection_continuity_title)
         )
     }
 
-    fun onSwiftPairingCardViewClicked() {
+    private fun onSwiftPairingCardViewClicked() {
         navigateToAdvertisementFragmentWithType(
             listOf(AdvertisementSetType.ADVERTISEMENT_TYPE_SWIFT_PAIRING),
-            "Swift Pair Collection"
+            getString(R.string.collection_swift_pair_title)
         )
     }
 
-    fun onLovespouseCardViewClicked() {
+    private fun onLovespouseCardViewClicked() {
         navigateToAdvertisementFragmentWithType(
             listOf(
                 AdvertisementSetType.ADVERTISEMENT_TYPE_LOVESPOUSE_PLAY,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_LOVESPOUSE_STOP
-            ), "Lovespouse Collection"
+            ),
+            getString(R.string.collection_lovespouse_title)
         )
     }
 
-    fun onKitchenSinkCardViewClicked(context: Context) {
-        // Set Random Mode for Kitchen Sink
+    private fun onKitchenSinkCardViewClicked(context: Context) {
         (context.applicationContext as BleAdvertiserApplication).queueHandler
             .setAdvertisementQueueMode(AdvertisementQueueMode.ADVERTISEMENT_QUEUE_MODE_RANDOM)
 
@@ -302,21 +233,17 @@ class AdvertisementCollectionFragment : Fragment() {
                 AdvertisementSetType.ADVERTISEMENT_TYPE_FAST_PAIRING_PHONE_SETUP,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_FAST_PAIRING_NON_PRODUCTION,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_FAST_PAIRING_DEBUG,
-
                 AdvertisementSetType.ADVERTISEMENT_TYPE_CONTINUITY_NEW_DEVICE,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_CONTINUITY_NEW_AIRTAG,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_CONTINUITY_NOT_YOUR_DEVICE,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_CONTINUITY_ACTION_MODALS,
-
                 AdvertisementSetType.ADVERTISEMENT_TYPE_EASY_SETUP_WATCH,
                 AdvertisementSetType.ADVERTISEMENT_TYPE_EASY_SETUP_BUDS,
-
                 AdvertisementSetType.ADVERTISEMENT_TYPE_SWIFT_PAIRING,
-
                 AdvertisementSetType.ADVERTISEMENT_TYPE_LOVESPOUSE_PLAY,
-                AdvertisementSetType.ADVERTISEMENT_TYPE_LOVESPOUSE_STOP,
-
-                ), "Kitchen Sink Collection"
+                AdvertisementSetType.ADVERTISEMENT_TYPE_LOVESPOUSE_STOP
+            ),
+            getString(R.string.collection_kitchen_sink_title)
         )
     }
 }

@@ -17,8 +17,10 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
-import io.github.kirillka645.bleadvertiserpro.Helpers.LogFileManager
+import androidx.preference.SwitchPreferenceCompat
+import com.google.android.material.color.MaterialColors
 import io.github.kirillka645.bleadvertiserpro.Helpers.LogDirectoryPicker
+import io.github.kirillka645.bleadvertiserpro.Helpers.LogFileManager
 import io.github.kirillka645.bleadvertiserpro.Helpers.ThemeManager
 import io.github.kirillka645.bleadvertiserpro.Helpers.ThemeManager.Companion.THEME_MODE_KEY
 import io.github.kirillka645.bleadvertiserpro.R
@@ -32,70 +34,64 @@ class PreferencesFragment : PreferenceFragmentCompat(), MenuProvider {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         logDirectoryPicker = LogDirectoryPicker(requireActivity())
-        directoryPickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                result.data?.data?.let { uri ->
-                    logDirectoryPicker.handleResult(uri)
+        directoryPickerLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    result.data?.data?.let(logDirectoryPicker::handleResult)
                 }
             }
-        }
         logDirectoryPicker.initialize(directoryPickerLauncher)
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
-        // Set up logging switch listener
-        val loggingSwitch = findPreference<androidx.preference.SwitchPreferenceCompat>(getString(R.string.preference_key_enable_logging))
-        loggingSwitch?.isChecked = LogFileManager.getInstance(requireContext()).isLoggingEnabledAndValid()
+        val loggingSwitch =
+            findPreference<SwitchPreferenceCompat>(getString(R.string.preference_key_enable_logging))
+        loggingSwitch?.isChecked = LogFileManager.getInstance(requireContext())
+            .isLoggingEnabledAndValid()
         loggingSwitch?.setOnPreferenceChangeListener { _, newValue ->
-            val enabled = newValue as Boolean
-            if (enabled) {
-                // Check if we have any accessible directories first
-                val accessibleDirs = LogFileManager.getInstance(requireContext()).listAccessibleDirectories(requireContext())
-                Log.d(_logTag, "Available accessible directories: ${accessibleDirs.size}")
-                
+            if (newValue as Boolean) {
+                val logFileManager = LogFileManager.getInstance(requireContext())
+                val accessibleDirs =
+                    logFileManager.listAccessibleDirectories(requireContext())
+                Log.d(_logTag, "Available accessible directories: " + accessibleDirs.size)
+
                 logDirectoryPicker.pickDirectory { directory ->
-                    LogFileManager.getInstance(requireContext()).setCustomLogDirectory(directory, requireContext())
-                    LogFileManager.getInstance(requireContext()).initializeLogFile(requireContext())
-                    loggingSwitch.isChecked = LogFileManager.getInstance(requireContext()).isLoggingEnabledAndValid()
+                    logFileManager.setCustomLogDirectory(directory, requireContext())
+                    logFileManager.initializeLogFile(requireContext())
+                    loggingSwitch.isChecked = logFileManager.isLoggingEnabledAndValid()
                 }
-                false // Don't update switch until directory is selected
+                false
             } else {
                 LogFileManager.getInstance(requireContext()).disableLogging(requireContext())
                 true
             }
         }
 
-        // Set up theme mode preference
+        val themeManager = ThemeManager.getInstance()
         val themePreference = findPreference<ListPreference>(THEME_MODE_KEY)
         themePreference?.setOnPreferenceChangeListener { _, newValue ->
-            val themeMode = newValue as String
-            ThemeManager.getInstance().setTheme(requireContext(), themeMode)
-
-            // If the system is in dark mode, then when switching between FOLLOW_SYSTEM and DARK,
-            // the fragment will not be recreated. Same for light mode.
-            // Thus we need to manually update this.
-            themePreference.summary = ThemeManager.getInstance().getThemeString(requireContext())
-
+            themeManager.setTheme(requireContext(), newValue as String)
+            themePreference.summary = themeManager.getThemeString(requireContext())
             true
         }
-        themePreference?.summary = ThemeManager.getInstance().getThemeString(requireContext())
+        themePreference?.summary = themeManager.getThemeString(requireContext())
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.setBackgroundColor(
+            MaterialColors.getColor(view, com.google.android.material.R.attr.colorSurface)
+        )
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner)
     }
 
-    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        //menuInflater.inflate(R.menu.main, menu)
-    }
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) = Unit
 
-    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        return false
-    }
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean = false
 
     override fun onPrepareMenu(menu: Menu) {
         super.onPrepareMenu(menu)
@@ -104,7 +100,6 @@ class PreferencesFragment : PreferenceFragmentCompat(), MenuProvider {
             menu.findItem(R.id.nav_preferences),
             menu.findItem(R.id.nav_set_tx_power)
         )
-
         val context = requireContext()
 
         menuItems.forEach { menuItem ->
@@ -113,7 +108,6 @@ class PreferencesFragment : PreferenceFragmentCompat(), MenuProvider {
             val spannable = SpannableString(title)
 
             var textColor = resources.getColor(R.color.text_color, context.theme)
-
             if (menuItem?.itemId == R.id.nav_preferences) {
                 textColor = resources.getColor(R.color.text_color_light, context.theme)
                 menuItem.isEnabled = false
