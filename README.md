@@ -44,9 +44,21 @@ project for the original implementation and contributors.
 ./gradlew assembleDebug
 ```
 
-Java 21 and the Android SDK with `compileSdk = 36` / `minSdk = 26` are required.
-The CI workflow under `.github/workflows/build.yml` runs the same command on
-push and uploads the unsigned APK.
+Java 21, Android SDK Platform 36 and Build Tools 36.0.0 are required.
+The app supports Android 8.0 (API 26) and later. CI builds debug and release
+variants and uploads the APKs.
+
+For a reproducible Linux x86_64 environment, the setup script downloads pinned
+JDK, SDK and emulator packages and verifies their published checksums:
+
+```bash
+bash scripts/setup-android.sh
+source .gradle/hoplite-android/env.sh
+./gradlew assembleDebug lintDebug -Pandroid.builder.sdkDownload=false
+```
+
+The tools and download cache stay in `.gradle/hoplite-android`, outside Git.
+Emulator UI checks do not replace BLE testing on compatible physical hardware.
 
 ## Permissions
 
