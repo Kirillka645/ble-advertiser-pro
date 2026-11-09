@@ -80,22 +80,22 @@
     <string name="preference_theme_mode_follow_system">System Default</string>
 
     <!-- Material You / Dynamic Colors -->
-    <string name="preference_key_use_dynamic_colors">preferenceKeyUseDynamicColors</string>
+    <string name="preference_key_use_dynamic_colors" translatable="false">preferenceKeyUseDynamicColors</string>
     <string name="preference_title_use_dynamic_colors">Material You</string>
     <string name="preference_summary_use_dynamic_colors">Use the system wallpaper colour palette on Android 12 and later</string>
 
     <!-- Auto-stop -->
-    <string name="preference_key_auto_stop_minutes">preferenceKeyAutoStopMinutes</string>
+    <string name="preference_key_auto_stop_minutes" translatable="false">preferenceKeyAutoStopMinutes</string>
     <string name="preference_title_auto_stop_minutes">Auto-stop after (minutes)</string>
     <string name="preference_summary_auto_stop_minutes">Automatically stop advertising after N minutes. 0 disables auto-stop.</string>
 
     <!-- Burst mode -->
-    <string name="preference_key_burst_mode">preferenceKeyBurstMode</string>
+    <string name="preference_key_burst_mode" translatable="false">preferenceKeyBurstMode</string>
     <string name="preference_title_burst_mode">Burst Mode</string>
     <string name="preference_summary_burst_mode">Cycle through advertisement sets at the minimum supported interval</string>
 
     <!-- First-launch disclaimer -->
-    <string name="preference_key_disclaimer_accepted">preferenceKeyDisclaimerAccepted</string>
+    <string name="preference_key_disclaimer_accepted" translatable="false">preferenceKeyDisclaimerAccepted</string>
     <string name="disclaimer_title">Research / Educational Use Only</string>
     <string name="disclaimer_message">BLE Advertiser Pro broadcasts crafted Bluetooth Low Energy advertisements that mimic real consumer devices.\n\nThe app is intended for security research, BLE protocol study and lab testing only. Using it to harass, deceive or disrupt third parties may violate local laws, store policies and your operator\'s ToS.\n\nBy tapping Accept you confirm that you will only use this app on devices you own or with explicit permission, and that you take full responsibility for how you use it.</string>
     <string name="disclaimer_accept">I understand &amp; accept</string>

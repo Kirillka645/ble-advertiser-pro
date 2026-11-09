@@ -55,4 +55,5 @@
     <string name="session_range_far">مدى بعيد</string>
     <string name="session_range_unknown">المدى غير معروف</string>
     <string name="session_failed">فشل البث: %1$s</string>
+    <string name="session_stop">إيقاف الجلسة</string>
 </resources>

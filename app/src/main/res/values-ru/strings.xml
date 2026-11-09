@@ -79,8 +79,27 @@
     <string name="preference_theme_mode_dark">Тёмная</string>
     <string name="preference_theme_mode_follow_system">Как в системе</string>
 
+    <!-- Dynamic Colors -->
+    <string name="preference_title_use_dynamic_colors">Динамические цвета</string>
+    <string name="preference_summary_use_dynamic_colors">Использовать цветовую палитру системных обоев на Android 12 и новее.</string>
+
+    <!-- Auto-stop -->
+    <string name="preference_title_auto_stop_minutes">Автоостановка (мин)</string>
+    <string name="preference_summary_auto_stop_minutes">Автоматически останавливать BLE-трансляцию через N минут. Значение 0 отключает автоостановку.</string>
+
+    <!-- Burst mode -->
+    <string name="preference_title_burst_mode">Ускоренная смена наборов</string>
+    <string name="preference_summary_burst_mode">Переключать наборы с минимально поддерживаемым интервалом.</string>
+
+    <!-- First-launch disclaimer -->
+    <string name="disclaimer_title">Только для исследований и образовательных целей</string>
+    <string name="disclaimer_message">BLE Advertiser Pro передаёт специально сформированные рекламные сообщения Bluetooth Low Energy (BLE), имитирующие реальные потребительские устройства.\n\nПриложение предназначено только для исследований в области безопасности, изучения протокола BLE и лабораторных испытаний. Использование для преследования, обмана или нарушения работы устройств третьих лиц может нарушать местные законы, правила магазина приложений и условия обслуживания вашего оператора.\n\nНажимая «Понимаю и принимаю», вы подтверждаете, что будете использовать приложение только на принадлежащих вам устройствах либо на других устройствах с явного разрешения их владельцев и несёте полную ответственность за его использование.</string>
+    <string name="disclaimer_accept">Понимаю и принимаю</string>
+    <string name="disclaimer_decline">Выйти</string>
+
     <!-- Toasts -->
     <string name="toast_no_items_selected">Ничего не выбрано</string>
+    <string name="toast_auto_stop_triggered">Сработала автоостановка; BLE-трансляция прекращена.</string>
 
     <!-- Permissions -->
     <string name="missing_permissions_title">Отсутствуют разрешения</string>
