@@ -12,6 +12,7 @@ val app_name = "BLE Advertiser Pro"
 android {
     namespace = "io.github.kirillka645.bleadvertiserpro"
     compileSdk = 36
+    buildToolsVersion = "36.0.0"
 
     defaultConfig {
         applicationId = "io.github.kirillka645.bleadvertiserpro"
