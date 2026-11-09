@@ -79,8 +79,27 @@
     <string name="preference_theme_mode_dark">داكن</string>
     <string name="preference_theme_mode_follow_system">افتراضي النظام</string>
 
+    <!-- Dynamic Colors -->
+    <string name="preference_title_use_dynamic_colors">الألوان الديناميكية</string>
+    <string name="preference_summary_use_dynamic_colors">استخدام لوحة ألوان خلفية النظام على Android 12 والإصدارات الأحدث.</string>
+
+    <!-- Auto-stop -->
+    <string name="preference_title_auto_stop_minutes">الإيقاف التلقائي (بالدقائق)</string>
+    <string name="preference_summary_auto_stop_minutes">إيقاف بث إعلانات BLE تلقائيًا بعد N دقيقة. تؤدي القيمة 0 إلى تعطيل الإيقاف التلقائي.</string>
+
+    <!-- Burst mode -->
+    <string name="preference_title_burst_mode">وضع التبديل السريع</string>
+    <string name="preference_summary_burst_mode">التبديل بين مجموعات إعلانات BLE بأقصر فاصل زمني مدعوم.</string>
+
+    <!-- First-launch disclaimer -->
+    <string name="disclaimer_title">لأغراض البحث والتعليم فقط</string>
+    <string name="disclaimer_message">يبث BLE Advertiser Pro حزمًا إعلانيةً مُعدّة خصيصًا عبر تقنية Bluetooth Low Energy (BLE) لمحاكاة أجهزة استهلاكية حقيقية.\n\nهذا التطبيق مخصّص فقط للأبحاث الأمنية ودراسة بروتوكول BLE والاختبارات المخبرية. قد تؤدي إساءة استخدامه لمضايقة أطراف أخرى أو خداعها أو تعطيل أجهزتها إلى مخالفة القوانين المحلية وسياسات متجر التطبيقات وشروط خدمة مشغّل الشبكة.\n\nبالضغط على «أفهم وأوافق»، تؤكد أنك ستستخدم التطبيق فقط على الأجهزة التي تملكها أو على أجهزة أخرى بموافقة صريحة من مالكيها، وتتحمل كامل المسؤولية عن طريقة استخدامك له.</string>
+    <string name="disclaimer_accept">أفهم وأوافق</string>
+    <string name="disclaimer_decline">خروج</string>
+
     <!-- Toasts -->
     <string name="toast_no_items_selected">لم يتم تحديد عناصر</string>
+    <string name="toast_auto_stop_triggered">تم تفعيل الإيقاف التلقائي وإيقاف بث إعلانات BLE.</string>
 
     <!-- Permissions -->
     <string name="missing_permissions_title">أذونات مفقودة</string>

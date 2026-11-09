@@ -33,6 +33,7 @@
     <string name="home_background_permission">For scanning in the background, allow location access all the time in app settings.</string>
     <string name="session_start">Start session</string>
     <string name="session_pause">Pause session</string>
+    <string name="session_stop">Stop session</string>
     <string name="session_in_order">In order</string>
     <string name="session_shuffle">Shuffle</string>
     <string name="session_queue_order">Playback order</string>
