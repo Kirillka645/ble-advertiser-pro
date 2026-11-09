@@ -112,7 +112,8 @@ class AdvertisementForegroundService: IAdvertisementServiceCallback, IAdvertisem
         val notificationView = RemoteViews(packageName, R.layout.advertisement_foreground_service_notification)
 
         val app = applicationContext as BleAdvertiserApplication
-        val toggleImageSrc = when (app.queueHandler.isActive()) {
+        val isActive = app.queueHandler.isActive()
+        val toggleImageSrc = when (isActive) {
             true -> R.drawable.pause
             false -> R.drawable.play_arrow
         }
@@ -136,6 +137,10 @@ class AdvertisementForegroundService: IAdvertisementServiceCallback, IAdvertisem
         notificationView.setImageViewResource(
             R.id.advertisementForegroundServiceNotificationToggleImageView,
             toggleImageSrc
+        )
+        notificationView.setContentDescription(
+            R.id.advertisementForegroundServiceNotificationToggleImageView,
+            getString(if (isActive) R.string.session_pause else R.string.session_start)
         )
 
         val targetIconColor = resources.getColor(R.color.tint_target_icon, theme)
